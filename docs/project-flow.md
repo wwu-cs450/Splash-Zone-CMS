@@ -1,3 +1,4 @@
+```mermaid
 flowchart TD
     %% Entry
     A[App Loads] --> B{Firebase Auth Ready?}
@@ -54,3 +55,4 @@ flowchart TD
 
     %% Optional 404
     CONTINUE --> N["Optional: 404 / Not Found"]
+```
