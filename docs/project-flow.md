@@ -21,8 +21,6 @@ flowchart TD
     subgraph S1["App Shell"]
       direction TB
       F --> G["Home Page"]
-
-      %% Hamburger shows items conditionally
       F --> H{{"Hamburger Menu"}}
       H --> I["Client List"]
 
@@ -41,30 +39,37 @@ flowchart TD
       I2 -->|Yes| I3["Render List of Clients"]
       I2 -->|No| I4["Show Error + Retry"]
 
-      %% Admin sees 'Add Client' and edit/delete controls
+      %% Controls visibility
+      I3 --> I3C["Show 'Add Client' button for all users"]
+      I3 --> I3B["Show 'Edit' control for all users"]
       I3 --> I3A{Is Admin?}
-      I3A -->|Yes| I3A1["Show 'Add Client' button & Edit/Delete controls"]
-      I3A -->|No| I3A2["Hide admin controls (read-only)"]
+      I3A -->|Yes| I3A1["Show 'Delete' control (admin only)"]
+      I3A -->|No| I3A2["Hide 'Delete' control (user)"]
 
       %% Open a client
       I3 --> CS["Open Client Details"]
 
-      %% Read-only view for users
+      %% Detail view varies by role
       CS --> RU{Is Admin?}
-      RU -->|No| V1["View Details (read-only)"]
+      RU -->|No| U_VIEW["Client Details (user)"]
+      RU -->|Yes| A_VIEW["Client Details (admin)"]
 
-      %% Admin: Edit flow
-      RU -->|Yes| A_VIEW["View Details (admin)"]
-      A_VIEW --> E1["Click 'Edit'"]
+      %% Payment info visibility
+      U_VIEW --> P0["Payment Info: hidden / grayed"]
+      A_VIEW --> P1["Payment Info: visible"]
+
+      %% Shared: Edit flow (both user and admin)
+      U_VIEW --> E1["Click 'Edit'"]
+      A_VIEW --> E1
       E1 --> E2["Edit Form"]
       E2 --> E3{Validation OK?}
       E3 -->|Yes| E4["Write update to Firestore"]
       E3 -->|No| E5["Show Validation Errors"]
       E4 --> E6{Update Success?}
-      E6 -->|Yes| A_VIEW
+      E6 -->|Yes| CS
       E6 -->|No| E7["Show Error + Retry"]
 
-      %% Admin: Delete flow
+      %% Admin: Delete flow (button only visible to admin)
       A_VIEW --> D1["Click 'Delete'"]
       D1 --> D2{Confirm Delete?}
       D2 -->|Yes| D3["Delete in Firestore"]
@@ -73,8 +78,12 @@ flowchart TD
       D4 -->|Yes| I3["Back to List (refresh)"]
       D4 -->|No| D5["Show Error + Retry"]
 
-      %% Admin: Create flow
-      I3A1 --> C1["Click 'Add Client'"]
+      %% User: direct delete attempt blocked (route/API guard)
+      U_VIEW --> D0["Attempt delete (direct URL)"]
+      D0 --> DX["403 / Action blocked"]
+
+      %% Create flow (available to all users)
+      I3C --> C1["Click 'Add Client'"]
       C1 --> C2["Create Form"]
       C2 --> C3{Validation OK?}
       C3 -->|Yes| C4["Create in Firestore"]
