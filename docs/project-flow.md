@@ -1,4 +1,3 @@
-```mermaid
 flowchart TD
     %% Entry
     A["App Loads"] --> B{Firebase Auth Ready?}
@@ -55,13 +54,15 @@ flowchart TD
       RU -->|Yes| A_VIEW["Client Details (admin)"]
 
       %% Payment info visibility
-      U_VIEW --> P0["Payment Info: hidden / grayed"]
-      A_VIEW --> P1["Payment Info: visible"]
+      U_VIEW --> P0["Payment Info: hidden / grayed (status badge)"]
+      A_VIEW --> P1["Payment Info: visible (status badge)"]
 
       %% Shared: Edit flow (both user and admin)
       U_VIEW --> E1["Click 'Edit'"]
       A_VIEW --> E1
-      E1 --> E2["Edit Form"]
+      E1 --> E2["Edit Form (includes Clover Payment QR)"]
+      %% NEW: Edit includes Clover QR branch
+      E2 --> E2Q["Show Clover Payment QR / Share Link"]
       E2 --> E3{Validation OK?}
       E3 -->|Yes| E4["Write update to Firestore"]
       E3 -->|No| E5["Show Validation Errors"]
@@ -84,7 +85,9 @@ flowchart TD
 
       %% Create flow (available to all users)
       I3C --> C1["Click 'Add Client'"]
-      C1 --> C2["Create Form"]
+      C1 --> C2["Create Form (includes Clover Payment QR)"]
+      %% NEW: Create includes Clover QR branch
+      C2 --> C2Q["Show Clover Payment QR / Share Link"]
       C2 --> C3{Validation OK?}
       C3 -->|Yes| C4["Create in Firestore"]
       C3 -->|No| C5["Show Validation Errors"]
@@ -92,6 +95,27 @@ flowchart TD
       C6 -->|Yes| I3["Back to List (refresh)"]
       C6 -->|No| C7["Show Error + Retry"]
     end
+
+    %% NEW: Clover Payment Setup (external interaction, off-app)
+    subgraph S4["Clover Payment Setup (external)"]
+      direction TB
+      Q0["Cloud Function: generate Clover checkout + QR"] 
+      Q1["Display QR in form / provide shareable link"]
+      QX["External user scans QR (outside app)"]
+      Q2["Clover Hosted Payment Page"]
+      Q3{Payment submitted?}
+      Q3 -->|Yes| Q4["Clover creates token/customer"]
+      Q4 --> Q5["Clover Webhook → Cloud Function"]
+      Q5 --> Q6["Update Firestore: paymentInfo.onFile=true; store tokenRef"]
+      Q6 --> Q7["Realtime listener updates client record (status badge)"]
+      Q3 -->|No| Q9["User cancels / link expires (no change)"]
+    end
+
+    %% Wire QR branches into Clover flow
+    E2Q --> Q0
+    C2Q --> Q0
+    %% After webhook updates, bring user back to details
+    Q7 --> CS
 
     %% Analytics page (admin-only route guard + fetch)
     subgraph S3["Analytics Page"]
@@ -119,4 +143,3 @@ flowchart TD
 
     %% Optional 404
     CONTINUE --> N["Optional: 404 / Not Found"]
-```
