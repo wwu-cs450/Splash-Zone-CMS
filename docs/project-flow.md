@@ -1,7 +1,11 @@
-```mermaid
 ---
 config:
-  theme: base
+  theme: default
+  themeVariables:
+    primaryColor: '#1e1e1e'
+    primaryTextColor: '#ffffff'
+    lineColor: '#aaaaaa'
+    background: '#0d1117'
 ---
 flowchart TD
     A["App Loads"] --> B{Firebase Auth Ready?}
@@ -103,4 +107,3 @@ flowchart TD
     PR -->|Yes| C
     PR -->|No| CONTINUE(["Continue"])
     CONTINUE --> N["Optional: 404 / Not Found"]
-```
