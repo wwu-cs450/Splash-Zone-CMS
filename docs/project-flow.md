@@ -1,3 +1,4 @@
+```mermaid
 ---
 config:
   theme: default
@@ -107,3 +108,4 @@ flowchart TD
     PR -->|Yes| C
     PR -->|No| CONTINUE(["Continue"])
     CONTINUE --> N["Optional: 404 / Not Found"]
+```
