@@ -1,4 +1,4 @@
-name: CI
+name: CI tests
 
 on: [push, pull_request]
 
@@ -15,7 +15,9 @@ jobs:
         node-version: '24'
 
     - name: Install dependencies
-      run: cd cms-app && npm install
+      run: npm install
+      working-directory: cms-app
 
     - name: Run tests
-      run: cd cms-app && npm test
+      run: npm test
+      working-directory: cms-app
