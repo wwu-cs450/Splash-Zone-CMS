@@ -1,9 +1,9 @@
-name: CI tests
+name: Test coverage
 
 on: [push, pull_request]
 
 jobs:
-  test:
+  test-coverage:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,5 +19,5 @@ jobs:
       working-directory: cms-app
     
     - name: Get test coverage
-      run: npm run -- --coverage
+      run: npm test -- --coverage
       working-directory: cms-app
