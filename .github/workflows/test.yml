@@ -1,0 +1,32 @@
+name: CI tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+
+    - name: Set up Java (required for Firebase emulators)
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '25'
+
+    - name: Install dependencies
+      run: npm install
+      working-directory: cms-app
+
+    - name: Install Firebase CLI
+      run: npm install -g firebase-tools
+
+    - name: Run tests with Firebase emulators
+      run: firebase emulators:exec --only auth,firestore "npm test"
+      working-directory: cms-app
