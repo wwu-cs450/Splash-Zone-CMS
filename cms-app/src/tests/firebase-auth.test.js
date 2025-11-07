@@ -15,7 +15,7 @@ connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
 import { createUser, signIn } from "../api/firebase-auth.js";
 
 // Cleanup after all tests to prevent hanging processes
-afterAll(async () => {
+afterAllTests(async () => {
   // Delete the Firebase app to close all connections
   await deleteApp(firebaseApp);
 });
