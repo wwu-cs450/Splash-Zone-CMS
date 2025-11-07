@@ -1,5 +1,6 @@
 [codespell]
 skip=*.png,./.git/*,*.jpg,node_modules,package-lock.json,*.svg,./build,./dist,./coverage,./vendor
 
-# Use built-in dictionary; add your custom typos here
 builtin = clear
+
+ignore-words-list = afterAll
