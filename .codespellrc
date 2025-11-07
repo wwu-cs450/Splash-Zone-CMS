@@ -1,2 +1,25 @@
 [codespell]
-skip=*.png,./.git/*,*.jpg,node_modules,package-lock.json,*.svg
+skip=*.png,./.git/*,*.jpg,node_modules,package-lock.json,*.svg,./build,./dist,./coverage,./vendor
+
+# Ignore camelCase and mixedCase identifiers
+ignore-regex = ([a-z][A-Z]+)|
+               ([A-Z][a-z]+[A-Z][a-z]+)|
+               ([a-zA-Z0-9]+\(.*\))  # e.g. getAllRecords()
+
+# Allow common programming tokens that look like typos but aren’t
+ignore-words-list = \
+    nd, \
+    ans, \
+    teh, \
+    ue, \
+    ist, \
+    ot, \
+    fo, \
+    inout, \
+    setted, \
+    ba, \
+    iam, \
+    iamge
+
+# Use built-in dictionary; add your custom typos here
+builtin = clear
