@@ -3,6 +3,7 @@ import {
   getAuth,
   connectAuthEmulator,
 } from "firebase/auth";
+import { deleteApp } from "firebase/app";
 import firebaseApp from "../api/firebaseconfig.js";
 
 // Connect to the Auth emulator using the same app instance that firebase-auth.js uses
@@ -13,9 +14,11 @@ connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
 // They will use the same auth instance we just connected to the emulator
 import { createUser, signIn } from "../api/firebase-auth.js";
 
-// Optional: silence console noise during tests (disabled for ES modules)
-// With ES modules, you'd need to import jest functions explicitly
-// For now, we'll let console output through
+// Cleanup after all tests to prevent hanging processes
+afterAll(async () => {
+  // Delete the Firebase app to close all connections
+  await deleteApp(firebaseApp);
+});
 
 function uniqEmail(prefix = "user") {
   return `${prefix}.${Date.now()}.${Math.random().toString(36).slice(2)}@example.com`;
