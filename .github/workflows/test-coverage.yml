@@ -13,6 +13,12 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '24'
+    
+    - name: Set up Java (required for Firebase emulators)
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '25'
 
     - name: Install dependencies
       run: npm install
