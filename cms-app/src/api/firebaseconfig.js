@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth, connectAuthEmulator } from "firebase/auth";
+import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 // import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -27,10 +28,12 @@ const app = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(app);
 
 
-if (import.meta.env.DEV) {
+if (env.DEV) {
    const auth = getAuth(app);
    connectAuthEmulator(auth, "http://localhost:9099");
-   console.log("Firebase auth emulator connected");
+   connectFirestoreEmulator(getFirestore(app), "localhost", 8080);
+   console.log("Firebase auth emulator connected 9099");
+   console.log("Firebase firestore emulator connected 8080");
 }
 
 
