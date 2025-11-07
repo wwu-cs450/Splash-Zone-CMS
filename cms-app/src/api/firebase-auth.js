@@ -15,8 +15,8 @@ function createUser(email, password) {
             return user;
         })
         .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
+            // const errorCode = error.code;
+            // const errorMessage = error.message;
             // console.error("❌ Signup error:", errorCode, errorMessage);
             throw error; // Re-throw the error so it can be caught in the form
         });
@@ -26,13 +26,13 @@ function signIn(email, password) {
     return signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             const user = userCredential.user;
-            console.log("✅ User signed in:", user.email);
+            // console.log("✅ User signed in:", user.email);
             return user;
         })
         .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.error("❌ Sign-in error:", errorCode, errorMessage);
+            // const errorCode = error.code;
+            // const errorMessage = error.message;
+            // console.error("❌ Sign-in error:", errorCode, errorMessage);
             throw error;
         });
 }
