@@ -8,14 +8,17 @@ import { getAuth, connectAuthEmulator } from "firebase/auth";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// Use import.meta.env in Vite, fall back to process.env in Jest
+const env = typeof import.meta !== 'undefined' && import.meta.env ? import.meta.env : process.env;
+
 const firebaseConfig = {
- apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
- authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
- projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
- storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
- messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
- appId: import.meta.env.VITE_FIREBASE_APP_ID,
- measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+ apiKey: env.VITE_FIREBASE_API_KEY,
+ authDomain: env.VITE_FIREBASE_AUTH_DOMAIN,
+ projectId: env.VITE_FIREBASE_PROJECT_ID,
+ storageBucket: env.VITE_FIREBASE_STORAGE_BUCKET,
+ messagingSenderId: env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+ appId: env.VITE_FIREBASE_APP_ID,
+ measurementId: env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 
@@ -27,7 +30,7 @@ const app = initializeApp(firebaseConfig);
 if (import.meta.env.DEV) {
    const auth = getAuth(app);
    connectAuthEmulator(auth, "http://localhost:9099");
-   // console.log("Firebase auth emulator connected");
+   console.log("Firebase auth emulator connected");
 }
 
 

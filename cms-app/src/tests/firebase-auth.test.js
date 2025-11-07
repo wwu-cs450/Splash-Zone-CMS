@@ -2,49 +2,20 @@
 import {
   getAuth,
   connectAuthEmulator,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
 } from "firebase/auth";
-import app from "./firebase-test-config.js";
+import firebaseApp from "../api/firebaseconfig.js";
 
-// Connect to the Auth emulator
-const auth = getAuth(app);
+// Connect to the Auth emulator using the same app instance that firebase-auth.js uses
+const auth = getAuth(firebaseApp);
 connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
 
-// Test versions of the auth functions that use the test auth instance
-function createUser(email, password) {
-  return createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      const user = userCredential.user;
-      return user;
-    })
-    .catch((error) => {
-      throw error;
-    });
-}
+// Now import the actual functions from firebase-auth.js
+// They will use the same auth instance we just connected to the emulator
+import { createUser, signIn } from "../api/firebase-auth.js";
 
-function signIn(email, password) {
-  return signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      const user = userCredential.user;
-      return user;
-    })
-    .catch((error) => {
-      throw error;
-    });
-}
-
-// Optional: silence console noise during tests (commented out for debugging)
-// const origLog = console.log;
-// const origErr = console.error;
-// beforeAll(() => {
-//   console.log = jest.fn();
-//   console.error = jest.fn();
-// });
-// afterAll(() => {
-//   console.log = origLog;
-//   console.error = origErr;
-// });
+// Optional: silence console noise during tests (disabled for ES modules)
+// With ES modules, you'd need to import jest functions explicitly
+// For now, we'll let console output through
 
 function uniqEmail(prefix = "user") {
   return `${prefix}.${Date.now()}.${Math.random().toString(36).slice(2)}@example.com`;
