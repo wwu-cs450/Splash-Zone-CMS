@@ -1,2 +1,6 @@
 [codespell]
-skip=*.png,./.git/*,*.jpg,node_modules,package-lock.json,*.svg
+skip=*.png,./.git/*,*.jpg,node_modules,package-lock.json,*.svg,./build,./dist,./coverage,./vendor
+
+builtin = clear
+
+ignore-words-list = afterAll
