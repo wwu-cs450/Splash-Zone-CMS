@@ -32,8 +32,8 @@ if (env.DEV) {
    const auth = getAuth(app);
    connectAuthEmulator(auth, "http://localhost:9099");
    connectFirestoreEmulator(getFirestore(app), "localhost", 8080);
-   console.log("Firebase auth emulator connected 9099");
-   console.log("Firebase firestore emulator connected 8080");
+   // console.log("Firebase auth emulator connected 9099");
+   // console.log("Firebase firestore emulator connected 8080");
 }
 
 
