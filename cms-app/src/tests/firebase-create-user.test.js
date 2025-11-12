@@ -33,7 +33,9 @@ async function cleanupTestDoc(userId) {
   try {
     await deleteDoc(doc(db, "users", userId));
   } catch (error) {
-    // Ignore errors if document doesn't exist
+    console.error("Error code:", error.code);
+    console.error("Error message:", error.message);
+    console.error("Error stack:", error.stack);
   }
 }
 
