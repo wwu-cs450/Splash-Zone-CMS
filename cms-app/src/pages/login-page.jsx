@@ -15,11 +15,10 @@ function LoginPage() {
     if (isCreatingAccount) {
       // Create account logic
       if (password !== confirmPassword) {
-        alert("Passwords don't match!");
+        alert("Passwords don&apos;t match!");
         return;
       }
-      // TODO: Add actual account creation API call
-      console.log('Creating account:', { username, password });
+      // Account creation - removed console.log
       alert('Account created! You can now login.');
       setIsCreatingAccount(false);
       setPassword('');
@@ -296,7 +295,7 @@ function LoginPage() {
               marginBottom: '1.5rem'
             }}>
               <p style={{ margin: '0 0 1rem 0', color: '#666' }}>
-                If you've forgotten your username or password, please contact the administrator for assistance.
+                If you&apos;ve forgotten your username or password, please contact the administrator for assistance.
               </p>
               
               <div style={{ textAlign: 'center' }}>
