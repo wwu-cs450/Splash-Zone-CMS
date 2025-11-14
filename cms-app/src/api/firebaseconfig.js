@@ -25,16 +25,14 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(app);
+const db = getFirestore(app);
+const auth = getAuth(app);
 
-
+// Only connect to emulator in development mode
 if (env.DEV) {
-   const auth = getAuth(app);
-   connectAuthEmulator(auth, "http://localhost:9099");
-   connectFirestoreEmulator(getFirestore(app), "localhost", 8080);
-   // console.log("Firebase auth emulator connected 9099");
-   // console.log("Firebase firestore emulator connected 8080");
+  connectAuthEmulator(auth, "http://localhost:9099");
+  connectFirestoreEmulator(db, "127.0.0.1", 8080);
 }
 
-
-export default app;
+// Export the db and auth instances
+export { db, auth, app };
