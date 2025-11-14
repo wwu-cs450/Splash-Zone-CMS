@@ -25,7 +25,7 @@ function CustomerSearchPage() {
   };
 
   const buttons = [
-    ["B", "U", "D"],
+    ["B", "D", "U"],
     ["1", "2", "3"],
     ["4", "5", "6"],
     ["7", "8", "9"],
@@ -75,6 +75,7 @@ function CustomerSearchPage() {
             onClick={handleSubmit}
             className="submit-btn"
             disabled={!/^[BDU]\d{3}$/.test(code)}
+            aria-label="Submit customer code"
           >
             ✓
           </button>
