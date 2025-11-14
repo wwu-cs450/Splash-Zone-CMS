@@ -1,1 +1,5 @@
 journal.md
+# ignore all excel files and csv files for data security
+*.xlsx
+*.xls
+*.csv
