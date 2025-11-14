@@ -4,10 +4,10 @@ import {
   connectAuthEmulator,
 } from "firebase/auth";
 import { deleteApp } from "firebase/app";
-import firebaseApp from "../api/firebaseconfig.js";
+import { app } from "../api/firebaseconfig.js";
 
 // Connect to the Auth emulator using the same app instance that firebase-auth.js uses
-const auth = getAuth(firebaseApp);
+const auth = getAuth(app);
 connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
 
 // Now import the actual functions from firebase-auth.js
@@ -17,7 +17,7 @@ import { createUser, signIn } from "../api/firebase-auth.js";
 // Cleanup after all tests to prevent hanging processes
 afterAll(async () => {
   // Delete the Firebase app to close all connections
-  await deleteApp(firebaseApp);
+  await deleteApp(app);
 });
 
 function uniqEmail(prefix = "user") {
