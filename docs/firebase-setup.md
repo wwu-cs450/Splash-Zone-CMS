@@ -1,6 +1,6 @@
 # Firebase Setup
 
-This doc describes the pocess to get local firebase tools for development specifically the emulator.
+This doc describes the process to get local firebase tools for development specifically the emulator.
 
 ## Prerequisites
 
@@ -29,7 +29,7 @@ npm -v
 
 ## Firebase firetime setup
 
-Before running the init you will need add a .env file in the cms-app containting the actaul values of the following:
+Before running the init you will need add a .env file in the cms-app containing the actual values of the following:
 
 cms-app/.env
 
@@ -43,7 +43,7 @@ VITE_FIREBASE_APP_ID = "Your APP ID",
 VITE_FIREBASE_MEASUREMENT_ID = "Your Measurement ID"
 ```
 
-Because firebase charges based on read/write it is nessesary to use the firebase emulator for both the authentication and storage.
+Because firebase charges based on read/write it is necessary to use the firebase emulator for both the authentication and storage.
 These are the bash commands you will need to run to initialize the project. Open a terminal in the root of the project and run:
 
 ```bash
@@ -55,7 +55,7 @@ firebase login
 firebase init
 ```
 
-After "firebase init" is run an option box will appear. Use spacebar to select options and enter to confirm. Most things will be left as default execpt a few options
+After "firebase init" is run an option box will appear. Use space bar to select options and enter to confirm. Most things will be left as default except a few options
 
 - For Features:
   - Firestone
