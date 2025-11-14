@@ -2,10 +2,11 @@ import React, {useState} from 'react';
 import Button from 'react-bootstrap/Button';
 import Stack from 'react-bootstrap/Stack';
 import Card from 'react-bootstrap/Card';
+import '../css/analytics-page.css';
 
-const GraphView = () => <Card body>Place Holder for graphs and analytics that will be imported </Card>;
-const DataTableView = () => <Card body>Place Holder for data tables with "raw" data</Card>;
-const ExportOptions = () => <Card body>Place Holder for export options like file type or attribute selection</Card>;
+const GraphView = () => <Card>Place Holder for graphs and analytics that will be imported </Card>;
+const DataTableView = () => <Card>Place Holder for data tables with raw data</Card>;
+const ExportOptions = () => <Card>Place Holder for export options like file type or attribute selection</Card>;
 
 
 
