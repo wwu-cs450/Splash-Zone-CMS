@@ -11,7 +11,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/analytics" element={<AnalyticsPage />} />
         <Route path="/customers" element={<CustomerListPage />} />
-        <Route path="/" element={<CustomerSearchPage />} /> {/* Add this line */}
+        <Route path="/" element={<CustomerSearchPage />} />
       </Routes>
     </BrowserRouter>
   );
