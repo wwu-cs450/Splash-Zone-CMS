@@ -54,6 +54,13 @@
   transform: scale(1.05);
 }
 
+.keypad-btn:focus {
+  background-color: #b7d3e6;
+  transform: scale(1.05);
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+}
+
 /* Submit button */
 .submit-btn {
   width: 60px;
@@ -70,4 +77,11 @@
 .submit-btn:hover {
   background-color: #7acb78;
   transform: scale(1.05);
+}
+
+.submit-btn:focus {
+  background-color: #7acb78;
+  transform: scale(1.05);
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
 }
