@@ -1,11 +1,8 @@
 import {
-    getAuth,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
 } from "firebase/auth";
-import app from "./firebaseconfig";
-
-const auth = getAuth(app);
+import { auth } from "./firebaseconfig";
 
 function createUser(email, password) {
     return createUserWithEmailAndPassword(auth, email, password)
