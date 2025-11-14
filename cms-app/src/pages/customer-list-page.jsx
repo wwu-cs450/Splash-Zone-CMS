@@ -65,7 +65,3 @@ function CustomerListPage() {
 }
 
 export default CustomerListPage;
-
-    // <div>
-    //   <h1>Customer List Page</h1>
-    // </div>
