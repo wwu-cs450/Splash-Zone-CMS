@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Form, Button, Alert } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import '../css/login-page.css';
 
 
@@ -26,7 +26,7 @@ function Login() {
       setErrors(formErrors);
     } else {
       setErrors({});
-      console.log('Login attempted with:', { email, password });
+      // console.log('Login attempted with:', { email, password });
       // Here you would typically send a request to your server
     }
   };
