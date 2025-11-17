@@ -5,8 +5,10 @@ function CustomerSearchPage() {
   const [code, setCode] = useState("");
 
   const handleInput = (value) => {
-    if (code.length >= 4) return;
-    setCode((prev) => prev + value.toUpperCase());
+    setCode((prev) => {
+      if (prev.length >= 4) return prev;
+      return prev + value.toUpperCase();
+    });
   };
 
   const handleBackspace = () => {
@@ -23,7 +25,7 @@ function CustomerSearchPage() {
   };
 
   const buttons = [
-    ["B", "U", "D"],
+    ["B", "D", "U"],
     ["1", "2", "3"],
     ["4", "5", "6"],
     ["7", "8", "9"],
@@ -34,7 +36,14 @@ function CustomerSearchPage() {
       <div className="keypad-container">
 
         {/* Display Box */}
-        <div className="display-box">{code}</div>
+        <div
+          className="display-box"
+          role="textbox"
+          aria-label="Customer code input"
+          aria-readonly="true"
+        >
+          {code}
+        </div>
 
         {/* Keypad Grid */}
         <div className="keypad-grid">
@@ -62,7 +71,12 @@ function CustomerSearchPage() {
           </button>
 
           {/* Submit */}
-          <button onClick={handleSubmit} className="submit-btn">
+          <button
+            onClick={handleSubmit}
+            className="submit-btn"
+            disabled={!/^[BDU]\d{3}$/.test(code)}
+            aria-label="Submit customer code"
+          >
             ✓
           </button>
         </div>

@@ -46,12 +46,19 @@
   font-size: 22px;
   font-weight: 500;
   cursor: pointer;
-  transition: 0.2s;
+  transition: background-color 0.2s, transform 0.2s;
 }
 
 .keypad-btn:hover {
   background-color: #b7d3e6;
   transform: scale(1.05);
+}
+
+.keypad-btn:focus {
+  background-color: #b7d3e6;
+  transform: scale(1.05);
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
 }
 
 /* Submit button */
@@ -64,10 +71,26 @@
   font-size: 26px;
   font-weight: bold;
   cursor: pointer;
-  transition: 0.2s;
+  transition: background-color 0.2s, transform 0.2s;
 }
 
 .submit-btn:hover {
   background-color: #7acb78;
   transform: scale(1.05);
+}
+
+.submit-btn:focus {
+  background-color: #7acb78;
+  transform: scale(1.05);
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+}
+
+/* Disabled submit button */
+.submit-btn:disabled {
+  background-color: #c8c8c8;
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
 }
