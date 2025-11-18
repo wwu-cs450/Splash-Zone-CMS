@@ -21,7 +21,7 @@ function UploadPage() {
       );
 
       setMessage(`Successfully created member with ID: ${userId}`);
-      console.log('Created member:', userId);
+      // console.log('Created member:', userId);
     } catch (error) {
       setMessage(`Error: ${error.message}`);
       console.error('Error creating member:', error);
@@ -51,7 +51,7 @@ function UploadPage() {
 
       setUploadResults(results);
       setMessage('Upload complete! See results below.');
-      console.log('Upload results:', results);
+      // console.log('Upload results:', results);
     } catch (error) {
       setMessage(`Error uploading Excel: ${error.message}`);
       console.error('Error uploading Excel:', error);
