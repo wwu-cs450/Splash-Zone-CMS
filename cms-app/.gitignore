@@ -29,3 +29,5 @@ firebase.json
 firestore*
 
 /coverage
+
+*.xlsx
