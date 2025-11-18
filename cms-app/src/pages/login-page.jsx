@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
@@ -33,8 +32,7 @@ function Login() {
       setIsLoading(true);
 
       try {
-        const user = await signIn(email, password);
-        // console.log('Login successful:', user);
+        await signIn(email, password);
         navigate('/');
       } catch (error) {
         // Handle Firebase authentication errors
