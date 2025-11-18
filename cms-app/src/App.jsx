@@ -6,7 +6,7 @@ import AnalyticsPage from './pages/analytics-page';
 import CustomerListPage from './pages/customer-list-page';
 import CustomerSearchPage from './pages/customer-search-page';
 import LoginPage from './pages/login-page';
-import TestPage from './pages/test-page';
+import UploadPage from './pages/upload-page';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -56,7 +56,7 @@ function App() {
         />
         <Route
           path="/test"
-          element={user ? <TestPage/> : <Navigate to="/login" replace />}
+          element={user ? <UploadPage/> : <Navigate to="/login" replace />}
         />
       </Routes>
     </BrowserRouter>

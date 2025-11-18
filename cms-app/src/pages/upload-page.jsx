@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { createMember } from '../api/firebase-crud';
 import { uploadCustomerRecordsFromFile } from '../utils/excel-upload';
 
-function TestPage() {
+function UploadPage() {
   const [message, setMessage] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadResults, setUploadResults] = useState(null);
@@ -155,4 +155,4 @@ function TestPage() {
   );
 }
 
-export default TestPage;
+export default UploadPage;

@@ -13,26 +13,32 @@ function hasFillColor(cell, colorType) {
   }
 
   const fgColor = cell.fill.fgColor;
-  if (!fgColor || !fgColor.argb) {
+  if (!fgColor) {
     return false;
   }
 
-  const argb = fgColor.argb.toUpperCase();
-
-  // Specific gray and yellow colors from your Excel file
-  // ARGB format includes alpha channel (FF) + hex color
-  const grayColors = [
-    'FF757171', // Your specific gray color
-  ];
-
-  const yellowColors = [
-    'FFFFFF00', // Your specific yellow color
-  ];
-
+  // Check for gray using theme color
   if (colorType === 'gray') {
-    return grayColors.includes(argb);
-  } else if (colorType === 'yellow') {
-    return yellowColors.includes(argb);
+    // Gray is stored as theme 2 with tint -0.499984740745262
+    if (fgColor.theme === 2 && fgColor.tint !== undefined) {
+      // Check if tint is approximately -0.5 (allowing for small floating point differences)
+      const tint = fgColor.tint;
+      const isGray = tint < -0.49 && tint > -0.51;
+      return isGray;
+    }
+  }
+
+  // Check for yellow and other colors using direct ARGB
+  if (fgColor.argb) {
+    const argb = fgColor.argb.toUpperCase();
+
+    const yellowColors = [
+      'FFFFFF00', // Your specific yellow color
+    ];
+
+    if (colorType === 'yellow') {
+      return yellowColors.includes(argb);
+    }
   }
 
   return false;
@@ -84,8 +90,8 @@ export async function uploadCustomerRecordsFromFile(file) {
       throw new Error('No worksheet found in the Excel file');
     }
 
-    console.log(`Processing worksheet: ${worksheet.name}`);
-    console.log(`Total rows: ${worksheet.rowCount}`);
+    // console.log(`Processing worksheet: ${worksheet.name}`);
+    // console.log(`Total rows: ${worksheet.rowCount}`);
 
     // Collect all promises to wait for them
     const promises = [];
@@ -131,19 +137,19 @@ export async function uploadCustomerRecordsFromFile(file) {
           }
 
           // Log the data being processed
-          console.log(`Row ${rowNumber}:`, {
-            id,
-            name,
-            car,
-            isActive,
-            validPayment,
-          });
+        //   console.log(`Row ${rowNumber}:`, {
+        //     id,
+        //     name,
+        //     car,
+        //     isActive,
+        //     validPayment,
+        //   });
 
           // Create the member in Firebase
           await createMember(id, name, car, isActive, validPayment, notes);
 
           results.successful++;
-          console.log(`✓ Row ${rowNumber}: Successfully created member ${id}`);
+        //   console.log(`✓ Row ${rowNumber}: Successfully created member ${id}`);
         } catch (error) {
           results.failed++;
           results.errors.push({
@@ -193,8 +199,8 @@ export async function uploadCustomerRecords(filePath) {
       throw new Error('No worksheet found in the Excel file');
     }
 
-    console.log(`Processing worksheet: ${worksheet.name}`);
-    console.log(`Total rows: ${worksheet.rowCount}`);
+    // console.log(`Processing worksheet: ${worksheet.name}`);
+    // console.log(`Total rows: ${worksheet.rowCount}`);
 
     // Collect all promises to wait for them
     const promises = [];
@@ -239,20 +245,20 @@ export async function uploadCustomerRecords(filePath) {
             return;
           }
 
-          // Log the data being processed
-          console.log(`Row ${rowNumber}:`, {
-            id,
-            name,
-            car,
-            isActive,
-            validPayment,
-          });
+        // Log the data being processed
+        //   console.log(`Row ${rowNumber}:`, {
+        //     id,
+        //     name,
+        //     car,
+        //     isActive,
+        //     validPayment,
+        //   });
 
           // Create the member in Firebase
           await createMember(id, name, car, isActive, validPayment, notes);
 
           results.successful++;
-          console.log(` Row ${rowNumber}: Successfully created member ${id}`);
+        //   console.log(` Row ${rowNumber}: Successfully created member ${id}`);
         } catch (error) {
           results.failed++;
           results.errors.push({
@@ -283,17 +289,17 @@ export async function uploadCustomerRecords(filePath) {
  * @param {number} rowNumber - Row number
  */
 export function debugRowColors(row, rowNumber) {
-  console.log(`\n=== Row ${rowNumber} Colors ===`);
+//   console.log(`\n=== Row ${rowNumber} Colors ===`);
   for (let col = 1; col <= 4; col++) {
     const cell = row.getCell(col);
     const value = cell.value;
     const fill = cell.fill;
 
-    if (fill && fill.fgColor && fill.fgColor.argb) {
-      console.log(`  Column ${String.fromCharCode(64 + col)}: ${value} - Color: ${fill.fgColor.argb}`);
-    } else {
-      console.log(`  Column ${String.fromCharCode(64 + col)}: ${value} - No fill color`);
-    }
+    // if (fill && fill.fgColor && fill.fgColor.argb) {
+    //   console.log(`  Column ${String.fromCharCode(64 + col)}: ${value} - Color: ${fill.fgColor.argb}`);
+    // } else {
+    //   console.log(`  Column ${String.fromCharCode(64 + col)}: ${value} - No fill color`);
+    // }
   }
 }
 
@@ -304,23 +310,23 @@ export function debugRowColors(row, rowNumber) {
 export async function main() {
   const filePath = './src/utils/Customer records.xlsx'; // Adjust path as needed
 
-  console.log('Starting Excel upload process...');
-  console.log(`Reading file: ${filePath}\n`);
+//   console.log('Starting Excel upload process...');
+//   console.log(`Reading file: ${filePath}\n`);
 
   try {
     const results = await uploadCustomerRecords(filePath);
 
-    console.log('\n=== Upload Complete ===');
-    console.log(`Total rows processed: ${results.total}`);
-    console.log(`Successful: ${results.successful}`);
-    console.log(`Failed: ${results.failed}`);
+    // console.log('\n=== Upload Complete ===');
+    // console.log(`Total rows processed: ${results.total}`);
+    // console.log(`Successful: ${results.successful}`);
+    // console.log(`Failed: ${results.failed}`);
 
-    if (results.errors.length > 0) {
-      console.log('\nErrors:');
-      results.errors.forEach(({ row, error }) => {
-        console.log(`  Row ${row}: ${error}`);
-      });
-    }
+    // if (results.errors.length > 0) {
+    //   console.log('\nErrors:');
+    //   results.errors.forEach(({ row, error }) => {
+    //     console.log(`  Row ${row}: ${error}`);
+    //   });
+    // }
   } catch (error) {
     console.error('Fatal error:', error);
     process.exit(1);
