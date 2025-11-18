@@ -4,16 +4,20 @@ import { db } from "./firebaseconfig";
 /**
  * Creates or overwrites a user document in the database
  * @param {string} id - The user ID
+ * @param {string} name - User's name
  * @param {string} car - Car information
+ * @param {boolean} isActive - Whether the user is active
  * @param {boolean} validPayment - Whether payment is valid
  * @param {string} notes - Additional notes
  * @returns {Promise<string>} The user ID
  */
-async function createMember(id, car, validPayment, notes) {
+async function createMember(id, name, car, isActive, validPayment, notes) {
   const userId = id;
   try {
     const userData = {
+      name: name,
       car: car,
+      isActive: isActive,
       validPayment: validPayment,
       notes: notes
     };

@@ -45,11 +45,13 @@ describe("User CRUD Operations (emulator)", () => {
   describe("createMember", () => {
     test("successfully creates a new user document", async () => {
       const userId = uniqId("create");
+      const name = "John Doe";
       const carInfo = "Toyota Camry 2020";
+      const isActive = true;
       const validPayment = true;
       const notes = "Premium member";
 
-      const returnedId = await createMember(userId, carInfo, validPayment, notes);
+      const returnedId = await createMember(userId, name, carInfo, isActive, validPayment, notes);
 
       expect(returnedId).toBe(userId);
 
@@ -57,7 +59,9 @@ describe("User CRUD Operations (emulator)", () => {
       const user = await getMember(userId);
       expect(user).toEqual({
         id: userId,
+        name: name,
         car: carInfo,
+        isActive: isActive,
         validPayment: validPayment,
         notes: notes,
       });
@@ -68,11 +72,13 @@ describe("User CRUD Operations (emulator)", () => {
     test("overwrites existing user document", async () => {
       const userId = uniqId("overwrite");
 
-      await createMember(userId, "Old Car", true, "Old notes");
-      await createMember(userId, "New Car", false, "New notes");
+      await createMember(userId, "Old Name", "Old Car", true, true, "Old notes");
+      await createMember(userId, "New Name", "New Car", false, false, "New notes");
 
       const user = await getMember(userId);
+      expect(user.name).toBe("New Name");
       expect(user.car).toBe("New Car");
+      expect(user.isActive).toBe(false);
       expect(user.validPayment).toBe(false);
       expect(user.notes).toBe("New notes");
 
@@ -83,17 +89,21 @@ describe("User CRUD Operations (emulator)", () => {
   describe("getMember", () => {
     test("retrieves an existing user document", async () => {
       const userId = uniqId("get");
+      const name = "Jane Smith";
       const carInfo = "Honda Accord 2021";
+      const isActive = true;
       const validPayment = true;
       const notes = "Test user";
 
-      await createMember(userId, carInfo, validPayment, notes);
+      await createMember(userId, name, carInfo, isActive, validPayment, notes);
 
       const user = await getMember(userId);
 
       expect(user).toBeDefined();
       expect(user.id).toBe(userId);
+      expect(user.name).toBe(name);
       expect(user.car).toBe(carInfo);
+      expect(user.isActive).toBe(isActive);
       expect(user.validPayment).toBe(validPayment);
       expect(user.notes).toBe(notes);
 
@@ -114,9 +124,9 @@ describe("User CRUD Operations (emulator)", () => {
       const userId2 = uniqId("all2");
       const userId3 = uniqId("all3");
 
-      await createMember(userId1, "Car 1", true, "Notes 1");
-      await createMember(userId2, "Car 2", false, "Notes 2");
-      await createMember(userId3, "Car 3", true, "Notes 3");
+      await createMember(userId1, "User 1", "Car 1", true, true, "Notes 1");
+      await createMember(userId2, "User 2", "Car 2", false, false, "Notes 2");
+      await createMember(userId3, "User 3", "Car 3", true, true, "Notes 3");
 
       const allMembers = await getAllMembers();
 
@@ -146,9 +156,9 @@ describe("User CRUD Operations (emulator)", () => {
       const userId2 = uniqId("valid2");
       const userId3 = uniqId("invalid");
 
-      await createMember(userId1, "Car 1", true, "Valid payment");
-      await createMember(userId2, "Car 2", true, "Valid payment");
-      await createMember(userId3, "Car 3", false, "Invalid payment");
+      await createMember(userId1, "Valid User 1", "Car 1", true, true, "Valid payment");
+      await createMember(userId2, "Valid User 2", "Car 2", true, true, "Valid payment");
+      await createMember(userId3, "Invalid User", "Car 3", true, false, "Invalid payment");
 
       const validMembers = await getMembersByPaymentStatus(true);
 
@@ -171,9 +181,9 @@ describe("User CRUD Operations (emulator)", () => {
       const userId2 = uniqId("inv2");
       const userId3 = uniqId("val");
 
-      await createMember(userId1, "Car 1", false, "Invalid payment");
-      await createMember(userId2, "Car 2", false, "Invalid payment");
-      await createMember(userId3, "Car 3", true, "Valid payment");
+      await createMember(userId1, "Invalid User 1", "Car 1", true, false, "Invalid payment");
+      await createMember(userId2, "Invalid User 2", "Car 2", true, false, "Invalid payment");
+      await createMember(userId3, "Valid User", "Car 3", true, true, "Valid payment");
 
       const invalidMembers = await getMembersByPaymentStatus(false);
 
@@ -192,7 +202,7 @@ describe("User CRUD Operations (emulator)", () => {
     test("updates specific fields of a user", async () => {
       const userId = uniqId("update");
 
-      await createMember(userId, "Original Car", true, "Original notes");
+      await createMember(userId, "Original Name", "Original Car", true, true, "Original notes");
 
       await updateMember(userId, {
         car: "Updated Car",
@@ -200,9 +210,11 @@ describe("User CRUD Operations (emulator)", () => {
       });
 
       const user = await getMember(userId);
+      expect(user.name).toBe("Original Name"); // Should remain unchanged
       expect(user.car).toBe("Updated Car");
-      expect(user.notes).toBe("Updated notes");
+      expect(user.isActive).toBe(true); // Should remain unchanged
       expect(user.validPayment).toBe(true); // Should remain unchanged
+      expect(user.notes).toBe("Updated notes");
 
       await cleanupTestDoc(userId);
     });
@@ -210,14 +222,16 @@ describe("User CRUD Operations (emulator)", () => {
     test("updates only one field", async () => {
       const userId = uniqId("partial");
 
-      await createMember(userId, "Car", true, "Notes");
+      await createMember(userId, "Test User", "Car", true, true, "Notes");
 
       await updateMember(userId, {
         validPayment: false,
       });
 
       const user = await getMember(userId);
+      expect(user.name).toBe("Test User");
       expect(user.car).toBe("Car");
+      expect(user.isActive).toBe(true);
       expect(user.notes).toBe("Notes");
       expect(user.validPayment).toBe(false);
 
@@ -237,7 +251,7 @@ describe("User CRUD Operations (emulator)", () => {
     test("deletes an existing user document", async () => {
       const userId = uniqId("delete");
 
-      await createMember(userId, "Car", true, "Notes");
+      await createMember(userId, "Delete User", "Car", true, true, "Notes");
 
       // Verify it exists
       let user = await getMember(userId);
@@ -266,9 +280,11 @@ describe("User CRUD Operations (emulator)", () => {
       const userId = uniqId("workflow");
 
       // Create
-      await createMember(userId, "Toyota", true, "New customer");
+      await createMember(userId, "Workflow User", "Toyota", true, true, "New customer");
       let user = await getMember(userId);
+      expect(user.name).toBe("Workflow User");
       expect(user.car).toBe("Toyota");
+      expect(user.isActive).toBe(true);
 
       // Update
       await updateMember(userId, { car: "Honda", notes: "Regular customer" });
@@ -292,8 +308,8 @@ describe("User CRUD Operations (emulator)", () => {
       const userId2 = uniqId("query2");
 
       // Create both with valid payment
-      await createMember(userId1, "Car 1", true, "Notes 1");
-      await createMember(userId2, "Car 2", true, "Notes 2");
+      await createMember(userId1, "Query User 1", "Car 1", true, true, "Notes 1");
+      await createMember(userId2, "Query User 2", "Car 2", true, true, "Notes 2");
 
       // Update one to invalid payment
       await updateMember(userId2, { validPayment: false });
