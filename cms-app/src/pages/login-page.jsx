@@ -4,14 +4,12 @@ import { useNavigate } from 'react-router';
 import '../css/login-page.css';
 import { signIn } from '../api/firebase-auth';
 
-
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
 
   const validateForm = () => {
     const newErrors = {};
@@ -20,7 +18,6 @@ function Login() {
     if (!password) newErrors.password = 'Password is required';
     return newErrors;
   };
-
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -39,11 +36,8 @@ function Login() {
         let errorMessage = 'An error occurred during login';
 
         if (error.code === 'auth/invalid-credential') {
+          // Consolidated error for wrong email/password combo
           errorMessage = 'Invalid email or password';
-        } else if (error.code === 'auth/user-not-found') {
-          errorMessage = 'No account found with this email';
-        } else if (error.code === 'auth/wrong-password') {
-          errorMessage = 'Incorrect password';
         } else if (error.code === 'auth/too-many-requests') {
           errorMessage = 'Too many failed attempts. Please try again later';
         }
@@ -54,7 +48,6 @@ function Login() {
       }
     }
   };
-
 
   return (
     <div className="login-wrapper">
@@ -80,7 +73,6 @@ function Login() {
             </Form.Control.Feedback>
           </Form.Group>
 
-
           <Form.Group className="mb-3" controlId="formBasicPassword">
             <Form.Label>Password</Form.Label>
             <Form.Control
@@ -95,7 +87,6 @@ function Login() {
             </Form.Control.Feedback>
           </Form.Group>
 
-
           <Button
             variant="primary"
             type="submit"
@@ -109,6 +100,5 @@ function Login() {
     </div>
   );
 }
-
 
 export default Login;
