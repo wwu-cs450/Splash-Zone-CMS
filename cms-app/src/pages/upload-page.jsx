@@ -14,7 +14,7 @@ function UploadPage() {
       const userId = await createMember(
         'B000', // id - unique timestamp-based ID
         "Zachary Kim",            // name
-        "2022 Hyundai Tuscon, blue",   // car
+        "2022 Hyundai Tucson, blue",   // car
         true,                  // isActive
         true,                  // validPayment
         "Test member created from test page" // notes
