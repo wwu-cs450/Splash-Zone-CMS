@@ -12,9 +12,9 @@ function UploadPage() {
       setMessage('Creating member...');
 
       const userId = await createMember(
-        `test-${Date.now()}`, // id - unique timestamp-based ID
-        "John Doe",            // name
-        "Toyota Camry 2020",   // car
+        'B000', // id - unique timestamp-based ID
+        "Zachary Kim",            // name
+        "2022 Hyundai Tuscon, blue",   // car
         true,                  // isActive
         true,                  // validPayment
         "Test member created from test page" // notes
