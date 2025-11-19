@@ -4,9 +4,9 @@ import Stack from 'react-bootstrap/Stack';
 import Card from 'react-bootstrap/Card';
 import '../css/analytics-page.css';
 
-const GraphView = () => <Card>Place Holder for graphs and analytics that will be imported </Card>;
-const DataTableView = () => <Card>Place Holder for data tables with raw data</Card>;
-const ExportOptions = () => <Card>Place Holder for export options like file type or attribute selection</Card>;
+const GraphView = () => <Card body className="content-card">Place Holder for graphs and analytics that will be imported </Card>;
+const DataTableView = () => <Card body className="content-card">Place Holder for data tables with raw data</Card>;
+const ExportOptions = () => <Card body className="content-card">Place Holder for export options like file type or attribute selection</Card>;
 
 
 
@@ -26,8 +26,8 @@ function AnalyticsPage() {
 
   // Main render
   return (
-    <div className="p-4">
-      <h1 className="mb-4">Analytics Dashboard</h1>
+    <div className="analytics-page-wrapper">
+      <h1 className="dashboard-title">Analytics Dashboard</h1>
       <Stack direction="horizontal" gap={3} className='mb-4'>
         <Button variant={activeView === 'graphs' ? 'primary' : 'outline-primary'} onClick={() => setActiveView('graphs')}>
           View Graphs
