@@ -1,0 +1,118 @@
+/* Hamburger Button Styles */
+.hamburger-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1050;
+  width: 50px;
+  height: 50px;
+  background-color: #007bff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  padding: 10px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Hide hamburger button when menu is open */
+.hamburger-btn.active {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hamburger-btn:hover {
+  background-color: #0056b3;
+}
+
+.hamburger-btn:focus {
+  outline: 2px solid #0056b3;
+  outline-offset: 2px;
+}
+
+/* Hamburger Lines */
+.hamburger-btn .line {
+  width: 30px;
+  height: 3px;
+  background-color: white;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* Offcanvas Customization */
+.offcanvas {
+  width: 280px !important;
+}
+
+.offcanvas-header {
+  background-color: #007bff;
+  color: white;
+}
+
+.offcanvas-title {
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+.offcanvas-header .btn-close {
+  filter: brightness(0) invert(1);
+}
+
+/* Menu Items */
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 20px;
+  color: #333;
+  text-decoration: none;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  transition: all 0.2s ease;
+  font-size: 1.1rem;
+}
+
+.menu-item:hover {
+  background-color: #f0f0f0;
+  color: #007bff;
+  transform: translateX(5px);
+}
+
+.menu-item.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.menu-item.active:hover {
+  background-color: #0056b3;
+  color: white;
+}
+
+.menu-icon {
+  font-size: 1.5rem;
+  min-width: 30px;
+  text-align: center;
+}
+
+.menu-label {
+  font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hamburger-btn {
+    top: 15px;
+    left: 15px;
+    width: 45px;
+    height: 45px;
+  }
+
+  .offcanvas {
+    width: 250px !important;
+  }
+}
