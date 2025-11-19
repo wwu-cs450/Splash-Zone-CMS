@@ -3,3 +3,5 @@ journal.md
 *.xlsx
 *.xls
 *.csv
+# ignore specific json file that contains sensitive customer records
+Customer_records.json
