@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { createMember } from '../api/firebase-crud';
 import { uploadCustomerRecordsFromFile } from '../utils/excel-upload';
+import HamburgerMenu from '../components/hamburger-menu';
 
 function UploadPage() {
   const [message, setMessage] = useState('');
@@ -60,6 +61,7 @@ function UploadPage() {
 
   return (
     <div style={{ padding: '20px' }}>
+      <HamburgerMenu />
       <h1>Test Page</h1>
 
       <div style={{ marginBottom: '30px' }}>

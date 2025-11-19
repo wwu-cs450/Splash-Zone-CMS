@@ -21,6 +21,7 @@ import {
   updateMember,
   deleteMember,
 } from '../api/firebase-crud';
+import HamburgerMenu from '../components/hamburger-menu';
 
 function MembersPage() {
   const [members, setMembers] = useState([]);
@@ -204,12 +205,14 @@ function MembersPage() {
   };
 
   return (
-    <Container className="my-4">
-      <Row className="mb-3">
-        <Col>
-          <h2>Members</h2>
-        </Col>
-      </Row>
+    <>
+      <HamburgerMenu />
+      <Container className="my-4">
+        <Row className="mb-3">
+          <Col>
+            <h2>Members</h2>
+          </Col>
+        </Row>
 
       {error && (
         <Row className="mb-3">
@@ -510,7 +513,8 @@ function MembersPage() {
           </Button>
         </Modal.Footer>
       </Modal>
-    </Container>
+      </Container>
+    </>
   );
 }
 

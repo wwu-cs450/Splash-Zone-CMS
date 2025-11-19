@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../css/customer-search-page.css";
 import { getMember } from "../api/firebase-crud";
+import HamburgerMenu from "../components/hamburger-menu";
 
 function CustomerSearchPage() {
   const [code, setCode] = useState("");
@@ -60,6 +61,7 @@ function CustomerSearchPage() {
   if (memberData) {
     return (
       <div className="search-page-container">
+        <HamburgerMenu />
         <div className="member-details-container">
           <button onClick={handleBack} className="back-arrow" aria-label="Back to search">
             ← Back
@@ -102,6 +104,7 @@ function CustomerSearchPage() {
 
   return (
     <div className="search-page-container">
+      <HamburgerMenu />
       <div className="keypad-container">
 
         {/* Display Box */}
