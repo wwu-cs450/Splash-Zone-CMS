@@ -3,6 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Stack from 'react-bootstrap/Stack';
 import Card from 'react-bootstrap/Card';
 import '../css/analytics-page.css';
+import HamburgerMenu from '../components/hamburger-menu';
 
 const GraphView = () => <Card>Place Holder for graphs and analytics that will be imported </Card>;
 const DataTableView = () => <Card>Place Holder for data tables with raw data</Card>;
@@ -27,6 +28,7 @@ function AnalyticsPage() {
   // Main render
   return (
     <div className="p-4">
+      <HamburgerMenu />
       <h1 className="mb-4">Analytics Dashboard</h1>
       <Stack direction="horizontal" gap={3} className='mb-4'>
         <Button variant={activeView === 'graphs' ? 'primary' : 'outline-primary'} onClick={() => setActiveView('graphs')}>
