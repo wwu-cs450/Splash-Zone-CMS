@@ -27,5 +27,8 @@ dist-ssr
 .firebaserc
 firebase.json
 firestore*
+.firebase
 
 /coverage
+
+*.xlsx
