@@ -59,45 +59,68 @@ function CustomerSearchPage() {
 
   // If member data is loaded, show member details view
   if (memberData) {
+    // inside: if (memberData) {
+    const formatYesNo = (val) => {
+      if (val === "No") return "No";
+      if (val === "Yes") return "Yes";
+      return val ? "Yes" : "No";
+    };
+
+    const getHighlightStyle = (field) => {
+      if (field === "isActive" && (memberData.isActive === "No" || memberData.isActive === false)) {
+      return { backgroundColor: "#757171", color: "#ffffff" };
+      }
+      if (field === "validPayment" && (memberData.validPayment === "No" || memberData.validPayment === false)) {
+      return { backgroundColor: "#ffff00" };
+      }
+      return undefined;
+    };
+
     return (
       <div className="search-page-container">
-        <HamburgerMenu />
-        <div className="member-details-container">
-          <button onClick={handleBack} className="back-arrow" aria-label="Back to search">
-            ← Back
-          </button>
+      <HamburgerMenu />
+      <div className="member-details-container">
+        <button onClick={handleBack} className="back-arrow" aria-label="Back to search">
+        ← Back
+        </button>
 
-          <h2>Member Details</h2>
+        <h2>Member Details</h2>
 
-          <div className="member-info">
-            <div className="info-row">
-              <span className="info-label">ID:</span>
-              <span className="info-value">{memberData.id}</span>
-            </div>
-            <div className="info-row">
-              <span className="info-label">Name:</span>
-              <span className="info-value">{memberData.name}</span>
-            </div>
-            <div className="info-row">
-              <span className="info-label">Car:</span>
-              <span className="info-value">{memberData.car}</span>
-            </div>
-            <div className="info-row">
-              <span className="info-label">Active:</span>
-              <span className="info-value">{memberData.isActive ? "Yes" : "No"}</span>
-            </div>
-            <div className="info-row">
-              <span className="info-label">Valid Payment:</span>
-              <span className="info-value">{memberData.validPayment ? "Yes" : "No"}</span>
-            </div>
-            {memberData.notes && (
-              <div className="info-row">
-                <span className="info-label">Notes:</span>
-                <span className="info-value">{memberData.notes}</span>
-              </div>
-            )}
-          </div>
+        <div className="member-info">
+        <div className="info-row">
+          <span className="info-label">ID: </span>
+          <span className="info-value">{memberData.id}</span>
         </div>
+        <div className="info-row">
+          <span className="info-label">Name: </span>
+          <span className="info-value">{memberData.name}</span>
+        </div>
+        <div className="info-row">
+          <span className="info-label">Car: </span>
+          <span className="info-value">{memberData.car}</span>
+        </div>
+        <div className="info-row" style={getHighlightStyle("isActive")}>
+          <span className="info-label">Active: </span>
+          <span
+          className="info-value">
+          {formatYesNo(memberData.isActive)}
+          </span>
+        </div>
+        <div className="info-row" style={getHighlightStyle("validPayment")}>
+          <span className="info-label">Valid Payment: </span>
+          <span
+          className="info-value">
+          {formatYesNo(memberData.validPayment)}
+          </span>
+        </div>
+        {memberData.notes && (
+          <div className="info-row">
+          <span className="info-label">Notes: </span>
+          <span className="info-value">{memberData.notes}</span>
+          </div>
+        )}
+        </div>
+      </div>
       </div>
     );
   }
