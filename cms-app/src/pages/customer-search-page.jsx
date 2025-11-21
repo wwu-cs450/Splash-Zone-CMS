@@ -60,8 +60,6 @@ function CustomerSearchPage() {
   // If member data is loaded, show member details view
   if (memberData) {
     const formatYesNo = (val) => {
-      if (val === "No") return "No";
-      if (val === "Yes") return "Yes";
       return val ? "Yes" : "No";
     };
 
