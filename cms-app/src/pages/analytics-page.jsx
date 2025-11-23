@@ -26,11 +26,12 @@ function AnalyticsPage() {
   }
 
   // Main render
-  return (
-    <div className="p-4" style={{ marginTop: '80px' }}>
-      <HamburgerMenu />
-      <h1 className="mb-4">Analytics Dashboard</h1>
-      <Stack direction="horizontal" gap={3} className='mb-4'>
+return (
+  <div className="p-3">
+    <HamburgerMenu />
+    <div style={{ marginLeft: '60px' }}>
+      <h1 className="mb-3">Analytics Dashboard</h1>
+      <Stack direction="horizontal" gap={30} className='mb-3'>
         <Button variant={activeView === 'graphs' ? 'primary' : 'outline-primary'} onClick={() => setActiveView('graphs')}>
           View Graphs
         </Button>
@@ -43,7 +44,8 @@ function AnalyticsPage() {
       </Stack>
       {renderTab()}
     </div>
-  );
+  </div>
+);
 }
 
 export default AnalyticsPage;
