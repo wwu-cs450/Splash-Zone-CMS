@@ -5,6 +5,7 @@
   justify-content: center;
   width: 100%;
   height: 100vh;
+  padding: 16px;
 }
 
 /* Center keypad column */
@@ -93,4 +94,85 @@
   cursor: not-allowed;
   box-shadow: none;
   transform: none;
+}
+
+/* ---- MEMBER HEADER CARD ---- */
+
+.member-header-card {
+  background: #f7f7f7;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.07);
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.header-label {
+  font-weight: 600;
+}
+
+.header-value {
+  font-weight: 500;
+}
+
+
+/* ---- STATUS CARDS ---- */
+
+.status-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.status-card {
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Gray for inactive */
+.inactive-card {
+  background: #757171;
+  color: white;
+}
+
+/* Yellow for invalid payment */
+.invalid-payment-card {
+  background: #ffff00;
+  color: #000;
+}
+
+/* Default "ok" (green-ish but subtle) */
+.ok-card {
+  background: #d9f7d9;
+  color: #0a4d0a;
+}
+
+
+/* ---- NOTES CARD ---- */
+
+.notes-card {
+  background: #fafafa;
+  padding: 14px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.notes-label {
+  font-weight: 600;
+}
+
+.notes-value {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.95rem;
 }
