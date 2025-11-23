@@ -27,7 +27,7 @@ function AnalyticsPage() {
 
   // Main render
   return (
-    <div className="p-4">
+    <div className="p-4" style={{ marginTop: '80px' }}>
       <HamburgerMenu />
       <h1 className="mb-4">Analytics Dashboard</h1>
       <Stack direction="horizontal" gap={3} className='mb-4'>
