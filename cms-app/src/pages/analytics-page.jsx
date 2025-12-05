@@ -5,15 +5,73 @@ import Card from 'react-bootstrap/Card';
 import '../css/analytics-page.css';
 import HamburgerMenu from '../components/hamburger-menu';
 
-const GraphView = () => <Card body className="content-card">Place Holder for graphs and analytics that will be imported </Card>;
-const DataTableView = () => <Card body className="content-card">Place Holder for data tables with raw data</Card>;
-const ExportOptions = () => <Card body className="content-card">Place Holder for export options like file type or attribute selection</Card>;
+import { Chart as ChartJS} from 'chart.js/auto';
+import {Doughnut} from 'react-chartjs-2';
+import { getAllMembers } from '../api/firebase-crud';
 
+
+// Helper function to count members by tier
+// Returns object with tier names as keys and counts as values
+// e.g. { 'Basic': 10, 'Ultimate': 5, 'Delux': 2 }
+function memberCountByTier(data) {
+  const tierCounts = {};
+  data.forEach((member) => {
+    const tier = member.membershipTier;
+    if (tierCounts[tier]) {
+      tierCounts[tier] += 1;
+    } else {
+      tierCounts[tier] = 1;
+    }
+  });
+  return tierCounts;
+}
+
+function TierChart({ data }) {
+  const chartData = {
+    labels: Object.keys(memberCountByTier(data)),
+    datasets: [
+      {
+        label: 'Membership Tiers',
+        data: Object.values(memberCountByTier(data)),
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(41, 90, 123, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+        ],
+      },
+    ],
+  }
+  return <Doughnut data={chartData} />;
+}
+//const GraphView = () => <TierChart data={carData} />;
+const GraphView = () => <Card body className="content-card">Place Holder for graphs and analytics that will be imported</Card>;
+const DataTableView = () => <Card body className="content-card">Place Holder for data tables with raw data</Card>;
+const ExportOptions = () => <Card body className="content-card">Place Holder for export options like file type or attribute selection </Card>;
 
 
 function AnalyticsPage() {
   // Definition of state to track the active view
+  const [members, setMembers] = useState([]);
   const [activeView, setActiveView] = useState('graphs');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [filteredMembers, setFilteredMembers] = useState([]);
+
+  // Load members from Firestore
+  const loadMembers = async () => {
+    setIsLoading(true);
+    setError('');
+    try {
+      const data = await getAllMembers();
+      setMembers(data);
+      setFilteredMembers(data);
+    } catch (err) {
+      console.error(err);
+      setError('Failed to load members. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Function to render content based on state
   const renderTab = () => {
