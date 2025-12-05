@@ -58,22 +58,6 @@ function MembersPage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [memberToDelete, setMemberToDelete] = useState(null);
 
-  // Load members from Firestore
-  const loadMembers = async () => {
-    setIsLoading(true);
-    setError('');
-    try {
-      const data = await getAllMembers();
-      setMembers(data);
-      setFilteredMembers(data);
-    } catch (err) {
-      console.error(err);
-      setError('Failed to load members. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const [filterSubscription, setFilterSubscription] = useState('all');
   const [filterActive, setFilterActive] = useState('all');
   const [filterPayment, setFilterPayment] = useState('all');
@@ -121,11 +105,7 @@ function MembersPage() {
     saveAs(blob, 'CustomerList.xlsx');
   };
 
-  useEffect(() => {
-    loadMembers();
-  }, []);
-
-    // Filter members whenever searchTerm or members changes
+  // Filter members whenever searchTerm or members changes
   useEffect(() => {
     const term = (searchTerm || '').trim().toLowerCase();
 
