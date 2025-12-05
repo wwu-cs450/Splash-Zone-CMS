@@ -1,0 +1,9 @@
+h1 {
+    text-indent: 70px;
+} 
+
+@media (max-width: 768px) {
+    h1 {
+        text-indent: 50px;
+    }
+}

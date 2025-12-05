@@ -302,7 +302,7 @@ function MembersPage() {
       <Container className="my-4">
         <Row className="mb-3">
           <Col>
-            <h2>Customer List</h2>
+            <h2 className="text-indent">Customer List</h2>
           </Col>
         </Row>
 

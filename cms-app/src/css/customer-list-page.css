@@ -87,3 +87,8 @@
 :global(.text-muted-important) {
   color: var(--muted) !important;
 }
+
+
+.text-indent {
+  margin-left: 70px;
+}
