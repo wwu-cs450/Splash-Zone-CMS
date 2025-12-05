@@ -1,3 +1,7 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../css/customer-list-page.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 // MembersPage.jsx
 import React, { useEffect, useState } from 'react';
 import {
@@ -15,6 +19,10 @@ import {
 } from 'react-bootstrap';
 
 import { useMembers } from '../context/MembersContext';
+
+import ExcelJS from 'exceljs';
+import { saveAs } from 'file-saver';
+
 import HamburgerMenu from '../components/hamburger-menu';
 
 function MembersPage() {
@@ -50,14 +58,118 @@ function MembersPage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [memberToDelete, setMemberToDelete] = useState(null);
 
-  // Filter members whenever searchTerm or members changes
+  // Load members from Firestore
+  const loadMembers = async () => {
+    setIsLoading(true);
+    setError('');
+    try {
+      const data = await getAllMembers();
+      setMembers(data);
+      setFilteredMembers(data);
+    } catch (err) {
+      console.error(err);
+      setError('Failed to load members. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const [filterSubscription, setFilterSubscription] = useState('all');
+  const [filterActive, setFilterActive] = useState('all');
+  const [filterPayment, setFilterPayment] = useState('all');
+
+  const handleExportExcel = async (members) => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Members');
+
+    // Add header row
+    worksheet.addRow(['ID', 'Name', 'Car', 'Active', 'Valid Payment', 'Notes']);
+
+    // Add data rows
+    members.forEach((m) => {
+      const row = worksheet.addRow([
+        m.id,
+        m.name,
+        m.car,
+        m.isActive ? 'Yes' : 'No',
+        m.validPayment ? 'Yes' : 'No',
+        m.notes,
+      ]);
+
+      // Apply row color based on status
+      if (!m.isActive) {
+        row.eachCell((cell) => {
+          cell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'FFAAAAAA' }, // gray
+          };
+        });
+      } else if (!m.validPayment) {
+        row.eachCell((cell) => {
+          cell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'FFFFFF99' }, // yellow
+          };
+        });
+      }
+    });
+
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(blob, 'CustomerList.xlsx');
+  };
+
   useEffect(() => {
-    const term = searchTerm.toLowerCase();
-    const filtered = members.filter((m) =>
-      m.name?.toLowerCase().includes(term)
-    );
+    loadMembers();
+  }, []);
+
+    // Filter members whenever searchTerm or members changes
+  useEffect(() => {
+    const term = (searchTerm || '').trim().toLowerCase();
+
+    const filtered = (members || []).filter((m) => {
+      // --- Search Term Filtering ---
+      const name = (m.name || '').toLowerCase();
+      const id = (m.id || '').toString().toLowerCase();
+
+      // Determine subscription level
+      // Priority: explicit subscription field, otherwise take first letter of ID
+      const subscription =
+        (m.subscription || (m.id ? m.id[0] : '')).toUpperCase();
+      if (filterSubscription !== 'all' && subscription !== filterSubscription) return false;
+
+      const subscriptionId = (m.subscriptionId || m.subId || '').toString().toLowerCase();
+
+      let matchesSearch =
+        !term ||
+        name.includes(term) ||
+        id.includes(term) ||
+        (subscription + id).replace(/\s+/g, '').includes(term) ||
+        subscriptionId.includes(term);
+
+      if (!matchesSearch) return false;
+
+      // --- Subscription Filter ---
+      if (filterSubscription !== 'all' && subscription !== filterSubscription) return false;
+
+      // --- Active Filter ---
+      const isActive = m.isActive === true || m.isActive === 'true';
+      if (filterActive === 'active' && !isActive) return false;
+      if (filterActive === 'inactive' && isActive) return false;
+
+      // --- Payment Filter ---
+      const hasPayment = m.validPayment === true || m.validPayment === 'true';
+      if (filterPayment === 'paid' && !hasPayment) return false;
+      if (filterPayment === 'needed' && hasPayment) return false;
+
+      return true;
+    });
+
     setFilteredMembers(filtered);
-  }, [searchTerm, members]);
+  }, [searchTerm, members, filterSubscription, filterActive, filterPayment]);
+
 
   // Handle Add Member form changes
   const handleAddInputChange = (e) => {
@@ -179,7 +291,7 @@ function MembersPage() {
       <Container className="my-4">
         <Row className="mb-3">
           <Col>
-            <h2>Members</h2>
+            <h2>Customer List</h2>
           </Col>
         </Row>
 
@@ -195,22 +307,57 @@ function MembersPage() {
       <Row className="align-items-center mb-3">
         <Col md={8}>
           <InputGroup>
-            <InputGroup.Text>Search</InputGroup.Text>
+            <InputGroup.Text><FontAwesomeIcon icon={faSearch} /></InputGroup.Text>
             <Form.Control
               type="text"
-              placeholder="Search by name..."
+              placeholder="Search by Name or 'Subscription Letter + ID'"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </InputGroup>
+          <Form.Select
+            className="w-25 me-2"
+            value={filterSubscription}
+            onChange={(e) => setFilterSubscription(e.target.value)}
+          >
+            <option value="all">All Subscription Levels</option>
+            <option value="B">B (Basic)</option>
+            <option value="D">D (Deluxe)</option>
+            <option value="U">U (Ultimate)</option>
+          </Form.Select>
+
+          <Form.Select
+            className="w-25 me-2"
+            value={filterActive}
+            onChange={(e) => setFilterActive(e.target.value)}
+          >
+            <option value="all">All Members</option>
+            <option value="active">Active Members</option>
+            <option value="inactive">Inactive Members</option>
+          </Form.Select>
+
+          <Form.Select
+            className="w-25"
+            value={filterPayment}
+            onChange={(e) => setFilterPayment(e.target.value)}
+          >
+            <option value="all">All Payment Status</option>
+            <option value="paid">Active Payment</option>
+            <option value="needed">Payment Needed</option>
+          </Form.Select>
+
         </Col>
         <Col md={4} className="text-md-end mt-2 mt-md-0">
           <Button
             variant={showAddForm ? 'secondary' : 'primary'}
             onClick={() => setShowAddForm((prev) => !prev)}
           >
-            {showAddForm ? 'Close Add Member' : 'Add Member'}
+            {showAddForm ? 'Close Add Member' : '+ Add Member'}
           </Button>
+          <Button variant="outline-primary" size="sm" onClick={() => handleExportExcel(filteredMembers)} // Make sure this is an array
+            >
+              Export
+            </Button>
         </Col>
       </Row>
 
@@ -330,7 +477,7 @@ function MembersPage() {
                 No members found.
               </div>
             ) : (
-              <Table striped hover size="sm" className="mb-0">
+              <Table hover size="sm" className="mb-0">
                 <thead className="table-light" style={{ position: 'sticky', top: 0, zIndex: 1 }}>
                   <tr>
                     <th>ID</th>
@@ -343,33 +490,57 @@ function MembersPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredMembers.map((member) => (
-                    <tr key={member.id}>
-                      <td>{member.id}</td>
-                      <td>{member.name}</td>
-                      <td>{member.car}</td>
-                      <td>{member.isActive ? 'Yes' : 'No'}</td>
-                      <td>{member.validPayment ? 'Yes' : 'No'}</td>
-                      <td>{member.notes}</td>
-                      <td className="text-end">
-                        <Button
-                          variant="outline-primary"
-                          size="sm"
-                          className="me-2"
-                          onClick={() => handleOpenEditModal(member)}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          variant="outline-danger"
-                          size="sm"
-                          onClick={() => handleOpenDeleteModal(member)}
-                        >
-                          Delete
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
+                  {filteredMembers.map((member) => {
+                    // normalize values so strings like "false" or "0" still work
+                    const isActive =
+                      member.isActive === true ||
+                      member.isActive === 'true' ||
+                      member.isActive === 1 ||
+                      member.isActive === '1';
+
+                    const validPayment =
+                      member.validPayment === true ||
+                      member.validPayment === 'true' ||
+                      member.validPayment === 1 ||
+                      member.validPayment === '1';
+
+                    // Priority: inactive (gray) overrides payment issue
+                    // We don't consider casees where a customer has is both inactive and has payment issues
+                    let rowClass = '';
+                    if (!isActive) {
+                      rowClass = 'member-row--inactive';
+                    } else if (!validPayment) {
+                      rowClass = 'member-row--payment-issue';
+                    }
+
+                    return (
+                      <tr key={member.id} className={rowClass}>
+                        <td>{member.id}</td>
+                        <td>{member.name}</td>
+                        <td>{member.car}</td>
+                        <td>{isActive ? 'Yes' : 'No'}</td>
+                        <td>{validPayment ? 'Yes' : 'No'}</td>
+                        <td>{member.notes}</td>
+                        <td className="text-end">
+                          <Button
+                            variant="outline-primary"
+                            size="sm"
+                            className="me-2"
+                            onClick={() => handleOpenEditModal(member)}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            variant="outline-danger"
+                            size="sm"
+                            onClick={() => handleOpenDeleteModal(member)}
+                          >
+                            Delete
+                          </Button>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </Table>
             )}
