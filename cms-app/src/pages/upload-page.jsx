@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { createMember } from '../api/firebase-crud';
+import { useMembers } from '../context/MembersContext';
 import { uploadCustomerRecordsFromFile } from '../utils/excel-upload';
 import HamburgerMenu from '../components/hamburger-menu';
 
 function UploadPage() {
+  const { createMember } = useMembers();
+
   const [message, setMessage] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadResults, setUploadResults] = useState(null);
@@ -48,7 +50,7 @@ function UploadPage() {
       setMessage('Uploading Excel file and creating members...');
       setUploadResults(null);
 
-      const results = await uploadCustomerRecordsFromFile(selectedFile);
+      const results = await uploadCustomerRecordsFromFile(selectedFile, createMember);
 
       setUploadResults(results);
       setMessage('Upload complete! See results below.');
