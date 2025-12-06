@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import "../css/customer-search-page.css";
-import { getMember } from "../api/firebase-crud";
+import { useMembers } from "../context/MembersContext";
 import HamburgerMenu from "../components/hamburger-menu";
 
 function CustomerSearchPage() {
+  const { getMember } = useMembers();
+
   const [code, setCode] = useState("");
   const [memberData, setMemberData] = useState(null);
   const [loading, setLoading] = useState(false);
