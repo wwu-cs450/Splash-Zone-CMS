@@ -4,12 +4,20 @@ import Stack from 'react-bootstrap/Stack';
 import Card from 'react-bootstrap/Card';
 import '../css/analytics-page.css';
 import HamburgerMenu from '../components/hamburger-menu';
+import data from '../api/mock-user-data.json';
 
 import { Chart as ChartJS} from 'chart.js/auto';
 import {Doughnut} from 'react-chartjs-2';
 import { getAllMembers } from '../api/firebase-crud';
 
-
+class Member {
+  constructor(id, name, email, membershipTier, joinDate) {
+    this.id = id;
+    this.name = name;
+    this.email = email;
+    this.membershipTier = membershipTier;
+    this.joinDate = joinDate;
+  }
 // Helper function to count members by tier
 // Returns object with tier names as keys and counts as values
 // e.g. { 'Basic': 10, 'Ultimate': 5, 'Delux': 2 }
