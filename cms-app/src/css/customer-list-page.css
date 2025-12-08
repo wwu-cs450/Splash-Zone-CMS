@@ -78,17 +78,29 @@
   margin-bottom: 1rem;
 }
 
+/* 1. LOCK THE TABLE LAYOUT */
 .table {
   border: 1px solid #e7eaf3;
   border-radius: 6px;
-  overflow: hidden;
+  border-collapse: separate; 
+  border-spacing: 0;
+  
+  /* ADD THIS: This stops the table from wobbling when data changes */
+  table-layout: fixed; 
+  width: 100%; 
+}
+
+/* 2. ADD THE TRUNCATE CLASS (For ID, Name, Car, Notes) */
+.cell-truncate {
+  white-space: nowrap;      /* Force text to one line */
+  overflow: hidden;         /* Hide overflow */
+  text-overflow: ellipsis;  /* Add "..." at the end */
+  vertical-align: middle;
 }
 
 :global(.text-muted-important) {
   color: var(--muted) !important;
 }
-
-/* ... existing root vars ... */
 
 html, body, #root {
   height: 100%;
@@ -120,5 +132,24 @@ html, body, #root {
 .table-scroll {
   flex: 1 1 auto;
   overflow-y: auto;
-  border-bottom: 1px solid #dee2e6; /* Optional: adds closure to bottom */
+  border-bottom: 1px solid #dee2e6;
+  position: relative; /* Helps anchor the scroll context */
+}
+
+/* Force sticky headers via CSS */
+.table-scroll thead th {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 2; /* Keeps header above the content */
+  
+  /* REQUIRED: Background color. 
+     Without this, the header is transparent and content scrolls behind it. 
+     #f8f9fa is the default Bootstrap light-gray. Use #fff for white. */
+  background-color: #f8f9fa !important; 
+  
+  /* Optional: Adds a subtle shadow to separate header from rows */
+  box-shadow: 0 2px 2px -1px rgba(0,0,0,0.1); 
+  
+  /* Fix for Bootstrap borders on sticky elements */
+  border-top: none !important;
 }

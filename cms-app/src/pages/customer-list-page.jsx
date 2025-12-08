@@ -2,7 +2,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/customer-list-page.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-// MembersPage.jsx
 import React, { useEffect, useState } from 'react';
 import {
   Container,
@@ -28,7 +27,6 @@ import {
 
 import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
-
 import HamburgerMenu from '../components/hamburger-menu';
 
 function MembersPage() {
@@ -38,7 +36,6 @@ function MembersPage() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-
   const [idError, setIdError] = useState('');
 
   // Add Member form state
@@ -134,7 +131,7 @@ function MembersPage() {
     loadMembers();
   }, []);
 
-    // Filter members whenever searchTerm or members changes
+  // Filter members whenever searchTerm or members changes
   useEffect(() => {
     const term = (searchTerm || '').trim().toLowerCase();
 
@@ -144,11 +141,7 @@ function MembersPage() {
       const id = (m.id || '').toString().toLowerCase();
 
       // Determine subscription level
-      // Priority: explicit subscription field, otherwise take first letter of ID
-      const subscription =
-        (m.subscription || (m.id ? m.id[0] : '')).toUpperCase();
-      if (filterSubscription !== 'all' && subscription !== filterSubscription) return false;
-
+      const subscription = (m.subscription || (m.id ? m.id[0] : '')).toUpperCase();
       const subscriptionId = (m.subscriptionId || m.subId || '').toString().toLowerCase();
 
       let matchesSearch =
@@ -180,7 +173,7 @@ function MembersPage() {
   }, [searchTerm, members, filterSubscription, filterActive, filterPayment]);
 
 
-  // Handle Add Member form changes
+  // --- ADD MEMBER HANDLERS ---
   const handleAddInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setAddForm((prev) => ({
@@ -224,7 +217,7 @@ function MembersPage() {
     }
   };
 
-  // Open edit modal for a member
+  // --- EDIT MEMBER HANDLERS ---
   const handleOpenEditModal = (member) => {
     setEditForm({
       id: member.id,
@@ -272,7 +265,7 @@ function MembersPage() {
     }
   };
 
-  // Delete flow
+  // --- DELETE MEMBER HANDLERS ---
   const handleOpenDeleteModal = (member) => {
     setMemberToDelete(member);
     setShowDeleteModal(true);
@@ -488,8 +481,8 @@ function MembersPage() {
         </div>
 
         {/* Scrollable table section */}
-        <Row className="table-section g-0"> {/* g-0 removes extra bootstrap gutter margins */}
-          <Col className="d-flex flex-column h-100"> {/* ADD h-100 HERE */}
+        <Row className="table-section g-0">
+          <Col className="d-flex flex-column h-100">
             <div className="border rounded table-scroll">
               {isLoading ? (
                 <div className="d-flex justify-content-center align-items-center h-100">
@@ -497,27 +490,18 @@ function MembersPage() {
                   <span>Loading members...</span>
                 </div>
               ) : filteredMembers.length === 0 ? (
-                // ... existing no members code
                 <div className="p-3 text-center text-muted">No members found.</div>
               ) : (
                 <Table hover size="sm" className="mb-0 w-100">
-                  <thead
-                    className="table-light"
-                    style={{ 
-                      position: 'sticky', 
-                      top: 0, 
-                      zIndex: 1020, /* Increased Z-Index to stay above row colors */
-                      boxShadow: '0 2px 2px -1px rgba(0,0,0,0.1)' /* Optional: Shadow for depth */
-                    }}
-                  >
+                  <thead className="table-light">
                     <tr>
-                      <th>ID</th>
-                      <th>Name</th>
-                      <th>Car</th>
-                      <th>Active</th>
-                      <th>Valid Payment</th>
-                      <th>Notes</th>
-                      <th className="text-end">Actions</th>
+                      <th style={{ width: '10%' }}>ID</th>
+                      <th style={{ width: '20%' }}>Name</th>
+                      <th style={{ width: '15%' }}>Car</th>
+                      <th style={{ width: '10%' }}>Active</th>
+                      <th style={{ width: '10%' }}>Valid Payment</th>
+                      <th style={{ width: '25%' }}>Notes</th>
+                      <th className="text-end" style={{ width: '10%' }}></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -543,12 +527,25 @@ function MembersPage() {
 
                       return (
                         <tr key={member.id} className={rowClass}>
-                          <td>{member.id}</td>
-                          <td>{member.name}</td>
-                          <td>{member.car}</td>
+                          {/* Truncate with Tooltip for ID, Name, Car, Notes */}
+                          <td className="cell-truncate" title={member.id}>
+                            {member.id}
+                          </td>
+                          <td className="cell-truncate" title={member.name}>
+                            {member.name}
+                          </td>
+                          <td className="cell-truncate" title={member.car}>
+                            {member.car}
+                          </td>
+
+                          {/* Standard Boolean Columns */}
                           <td>{isActive ? 'Yes' : 'No'}</td>
                           <td>{validPayment ? 'Yes' : 'No'}</td>
-                          <td>{member.notes}</td>
+
+                          <td className="cell-truncate" title={member.notes}>
+                            {member.notes}
+                          </td>
+
                           <td className="text-end">
                             <Button
                               variant="outline-primary"
@@ -575,10 +572,118 @@ function MembersPage() {
             </div>
           </Col>
         </Row>
+
+        {/* --- MODALS (Restored) --- */}
+        
+        {/* Edit Member Modal */}
+        <Modal show={showEditModal} onHide={() => setShowEditModal(false)} centered>
+          <Modal.Header closeButton>
+            <Modal.Title>Edit Member</Modal.Title>
+          </Modal.Header>
+          <Form onSubmit={handleEditSubmit}>
+            <Modal.Body>
+              <Form.Group className="mb-3" controlId="editId">
+                <Form.Label>User ID (read-only)</Form.Label>
+                <Form.Control type="text" value={editForm.id} disabled />
+              </Form.Group>
+
+              <Form.Group className="mb-3" controlId="editName">
+                <Form.Label>Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="name"
+                  value={editForm.name}
+                  onChange={handleEditInputChange}
+                  required
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3" controlId="editCar">
+                <Form.Label>Car</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="car"
+                  value={editForm.car}
+                  onChange={handleEditInputChange}
+                />
+              </Form.Group>
+
+              <Row className="mb-3">
+                <Col md={6}>
+                  <Form.Group controlId="editIsActive">
+                    <Form.Check
+                      type="checkbox"
+                      label="Active"
+                      name="isActive"
+                      checked={editForm.isActive}
+                      onChange={handleEditInputChange}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                  <Form.Group controlId="editValidPayment">
+                    <Form.Check
+                      type="checkbox"
+                      label="Valid Payment"
+                      name="validPayment"
+                      checked={editForm.validPayment}
+                      onChange={handleEditInputChange}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+
+              <Form.Group className="mb-3" controlId="editNotes">
+                <Form.Label>Notes</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={3}
+                  name="notes"
+                  value={editForm.notes}
+                  onChange={handleEditInputChange}
+                />
+              </Form.Group>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={() => setShowEditModal(false)}>
+                Cancel
+              </Button>
+              <Button variant="primary" type="submit">
+                Save Changes
+              </Button>
+            </Modal.Footer>
+          </Form>
+        </Modal>
+
+        {/* Delete Confirmation Modal */}
+        <Modal show={showDeleteModal} onHide={handleCancelDelete} centered>
+          <Modal.Header closeButton>
+            <Modal.Title>Confirm Delete</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {memberToDelete ? (
+              <>
+                Are you sure you want to delete member{' '}
+                <strong>{memberToDelete.name}</strong> (ID: {memberToDelete.id})?
+                This action cannot be undone.
+              </>
+            ) : (
+              'Are you sure you want to delete this member?'
+            )}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCancelDelete}>
+              Cancel
+            </Button>
+            <Button variant="danger" onClick={handleConfirmDelete}>
+              Delete
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
       </Container>
     </>
   );
-
 }
 
 export default MembersPage;
