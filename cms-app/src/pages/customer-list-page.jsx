@@ -39,6 +39,8 @@ function MembersPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
 
+  const [idError, setIdError] = useState('');
+
   // Add Member form state
   const [showAddForm, setShowAddForm] = useState(false);
   const [addForm, setAddForm] = useState({
@@ -190,9 +192,17 @@ function MembersPage() {
   const handleAddSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setIdError('');
 
-    if (!addForm.id.trim() || !addForm.name.trim()) {
-      setError('ID and Name are required to create a member.');
+    const idPattern = /^[BDU]\d{3}$/; // B/D/U followed by 3 digits
+
+    if (!idPattern.test(addForm.id.trim())) {
+      setIdError("User ID must be in format B###, D###, or U###.");
+      return;
+    }
+
+    if (!addForm.name.trim()) {
+      setError("Name is required to create a member.");
       return;
     }
 
@@ -205,21 +215,12 @@ function MembersPage() {
         addForm.validPayment,
         addForm.notes.trim()
       );
-      // Refresh list
       await loadMembers();
-      // Reset form
-      setAddForm({
-        id: '',
-        name: '',
-        car: '',
-        isActive: true,
-        validPayment: true,
-        notes: '',
-      });
+      setAddForm({ id: '', name: '', car: '', isActive: true, validPayment: true, notes: '' });
       setShowAddForm(false);
     } catch (err) {
       console.error(err);
-      setError('Failed to create member. Please check the console for details.');
+      setError("Failed to create member. Please check the console for details.");
     }
   };
 
@@ -383,20 +384,28 @@ function MembersPage() {
                   <Row className="mb-3">
                     <Col md={4}>
                       <Form.Group controlId="addId">
-                        <Form.Label>User ID</Form.Label>
+                        <Form.Label>
+                          User ID<span className="text-danger">*</span>
+                        </Form.Label>
                         <Form.Control
                           type="text"
                           name="id"
                           value={addForm.id}
                           onChange={handleAddInputChange}
-                          placeholder="e.g. ABCD"
+                          placeholder="e.g. B101"
                           required
+                          isInvalid={!!idError}
                         />
+                        <Form.Control.Feedback type="invalid">
+                          {idError}
+                        </Form.Control.Feedback>
                       </Form.Group>
                     </Col>
                     <Col md={4}>
                       <Form.Group controlId="addName">
-                        <Form.Label>Name</Form.Label>
+                        <Form.Label>
+                          Name<span className="text-danger">*</span>
+                        </Form.Label>
                         <Form.Control
                           type="text"
                           name="name"
@@ -472,92 +481,95 @@ function MembersPage() {
       )}
 
       {/* Members table in scrollable box */}
-      <Row>
-        <Col>
-          <div
-            className="border rounded"
-            style={{ maxHeight: '400px', overflowY: 'auto' }}
-          >
-            {isLoading ? (
-              <div className="d-flex justify-content-center align-items-center py-5">
-                <Spinner animation="border" role="status" className="me-2" />
-                <span>Loading members...</span>
-              </div>
-            ) : filteredMembers.length === 0 ? (
-              <div className="p-3 text-center text-muted">
-                No members found.
-              </div>
-            ) : (
-              <Table hover size="sm" className="mb-0">
-                <thead className="table-light" style={{ position: 'sticky', top: 0, zIndex: 1 }}>
-                  <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Car</th>
-                    <th>Active</th>
-                    <th>Valid Payment</th>
-                    <th>Notes</th>
-                    <th className="text-end">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredMembers.map((member) => {
-                    // normalize values so strings like "false" or "0" still work
-                    const isActive =
-                      member.isActive === true ||
-                      member.isActive === 'true' ||
-                      member.isActive === 1 ||
-                      member.isActive === '1';
+      <Container fluid className="d-flex flex-column" style={{ minHeight: '100vh' }}>
+        <Row className="flex-grow-1">
+          <Col>
+            <div
+              className="border rounded"
+              style={{
+                height: '100%',
+                minHeight: '400px',
+                overflowY: 'auto',
+                overflowX: 'auto',
+                width: '100%',
+              }}
+            >
+              {isLoading ? (
+                <div className="d-flex justify-content-center align-items-center py-5">
+                  <Spinner animation="border" role="status" className="me-2" />
+                  <span>Loading members...</span>
+                </div>
+              ) : filteredMembers.length === 0 ? (
+                <div className="p-3 text-center text-muted">No members found.</div>
+              ) : (
+                <Table hover size="sm" className="mb-0 w-100">
+                  <thead className="table-light" style={{ position: 'sticky', top: 0, zIndex: 1 }}>
+                    <tr>
+                      <th>ID</th>
+                      <th>Name</th>
+                      <th>Car</th>
+                      <th>Active</th>
+                      <th>Valid Payment</th>
+                      <th>Notes</th>
+                      <th className="text-end">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredMembers.map((member) => {
+                      const isActive =
+                        member.isActive === true ||
+                        member.isActive === 'true' ||
+                        member.isActive === 1 ||
+                        member.isActive === '1';
 
-                    const validPayment =
-                      member.validPayment === true ||
-                      member.validPayment === 'true' ||
-                      member.validPayment === 1 ||
-                      member.validPayment === '1';
+                      const validPayment =
+                        member.validPayment === true ||
+                        member.validPayment === 'true' ||
+                        member.validPayment === 1 ||
+                        member.validPayment === '1';
 
-                    // Priority: inactive (gray) overrides payment issue
-                    // We don't consider casees where a customer has is both inactive and has payment issues
-                    let rowClass = '';
-                    if (!isActive) {
-                      rowClass = 'member-row--inactive';
-                    } else if (!validPayment) {
-                      rowClass = 'member-row--payment-issue';
-                    }
+                      let rowClass = '';
+                      if (!isActive) {
+                        rowClass = 'member-row--inactive';
+                      } else if (!validPayment) {
+                        rowClass = 'member-row--payment-issue';
+                      }
 
-                    return (
-                      <tr key={member.id} className={rowClass}>
-                        <td>{member.id}</td>
-                        <td>{member.name}</td>
-                        <td>{member.car}</td>
-                        <td>{isActive ? 'Yes' : 'No'}</td>
-                        <td>{validPayment ? 'Yes' : 'No'}</td>
-                        <td>{member.notes}</td>
-                        <td className="text-end">
-                          <Button
-                            variant="outline-primary"
-                            size="sm"
-                            className="me-2"
-                            onClick={() => handleOpenEditModal(member)}
-                          >
-                            Edit
-                          </Button>
-                          <Button
-                            variant="outline-danger"
-                            size="sm"
-                            onClick={() => handleOpenDeleteModal(member)}
-                          >
-                            Delete
-                          </Button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </Table>
-            )}
-          </div>
-        </Col>
-      </Row>
+                      return (
+                        <tr key={member.id} className={rowClass}>
+                          <td>{member.id}</td>
+                          <td>{member.name}</td>
+                          <td>{member.car}</td>
+                          <td>{isActive ? 'Yes' : 'No'}</td>
+                          <td>{validPayment ? 'Yes' : 'No'}</td>
+                          <td>{member.notes}</td>
+                          <td className="text-end">
+                            <Button
+                              variant="outline-primary"
+                              size="sm"
+                              className="me-2"
+                              onClick={() => handleOpenEditModal(member)}
+                            >
+                              Edit
+                            </Button>
+                            <Button
+                              variant="outline-danger"
+                              size="sm"
+                              onClick={() => handleOpenDeleteModal(member)}
+                            >
+                              Delete
+                            </Button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </Table>
+              )}
+            </div>
+          </Col>
+        </Row>
+      </Container>
 
       {/* Edit Member Modal */}
       <Modal show={showEditModal} onHide={() => setShowEditModal(false)} centered>
