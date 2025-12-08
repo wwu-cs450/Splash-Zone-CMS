@@ -300,210 +300,216 @@ function MembersPage() {
   return (
     <>
       <HamburgerMenu />
-      <Container className="my-4">
-        <Row className="mb-3">
-          <Col>
-            <h2>Customer List</h2>
-          </Col>
-        </Row>
+      <Container fluid className="page-wrap">
+        {/* Header + controls */}
+        <div className="header-section py-3">
+          <Row className="mb-3">
+            <Col>
+              <h2>Customer List</h2>
+            </Col>
+          </Row>
 
-      {error && (
-        <Row className="mb-3">
-          <Col>
-            <Alert variant="danger">{error}</Alert>
-          </Col>
-      </Row>
-      )}
+          {error && (
+            <Row className="mb-3">
+              <Col>
+                <Alert variant="danger">{error}</Alert>
+              </Col>
+            </Row>
+          )}
 
-      {/* Search + Add button row */}
-      <Row className="align-items-center mb-3">
-        <Col md={8}>
-          <InputGroup>
-            <InputGroup.Text><FontAwesomeIcon icon={faSearch} /></InputGroup.Text>
-            <Form.Control
-              type="text"
-              placeholder="Search by Name or 'Subscription Letter + ID'"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </InputGroup>
-          <Form.Select
-            className="w-25 me-2"
-            value={filterSubscription}
-            onChange={(e) => setFilterSubscription(e.target.value)}
-          >
-            <option value="all">All Subscription Levels</option>
-            <option value="B">B (Basic)</option>
-            <option value="D">D (Deluxe)</option>
-            <option value="U">U (Ultimate)</option>
-          </Form.Select>
+          {/* Search + filters + add member */}
+          <Row className="align-items-center mb-3">
+            <Col md={8}>
+              <InputGroup>
+                <InputGroup.Text>
+                  <FontAwesomeIcon icon={faSearch} />
+                </InputGroup.Text>
+                <Form.Control
+                  type="text"
+                  placeholder="Search by Name or 'Subscription Letter + ID'"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </InputGroup>
 
-          <Form.Select
-            className="w-25 me-2"
-            value={filterActive}
-            onChange={(e) => setFilterActive(e.target.value)}
-          >
-            <option value="all">All Members</option>
-            <option value="active">Active Members</option>
-            <option value="inactive">Inactive Members</option>
-          </Form.Select>
+              <Form.Select
+                className="w-25 me-2"
+                value={filterSubscription}
+                onChange={(e) => setFilterSubscription(e.target.value)}
+              >
+                <option value="all">All Subscription Levels</option>
+                <option value="B">B (Basic)</option>
+                <option value="D">D (Deluxe)</option>
+                <option value="U">U (Ultimate)</option>
+              </Form.Select>
 
-          <Form.Select
-            className="w-25"
-            value={filterPayment}
-            onChange={(e) => setFilterPayment(e.target.value)}
-          >
-            <option value="all">All Payment Status</option>
-            <option value="paid">Active Payment</option>
-            <option value="needed">Payment Needed</option>
-          </Form.Select>
+              <Form.Select
+                className="w-25 me-2"
+                value={filterActive}
+                onChange={(e) => setFilterActive(e.target.value)}
+              >
+                <option value="all">All Members</option>
+                <option value="active">Active Members</option>
+                <option value="inactive">Inactive Members</option>
+              </Form.Select>
 
-        </Col>
-        <Col md={4} className="text-md-end mt-2 mt-md-0">
-          <Button
-            variant={showAddForm ? 'secondary' : 'primary'}
-            onClick={() => setShowAddForm((prev) => !prev)}
-          >
-            {showAddForm ? 'Close Add Member' : '+ Add Member'}
-          </Button>
-          <Button variant="outline-primary" size="sm" onClick={() => handleExportExcel(filteredMembers)} // Make sure this is an array
-            >
-              Export
-            </Button>
-        </Col>
-      </Row>
+              <Form.Select
+                className="w-25"
+                value={filterPayment}
+                onChange={(e) => setFilterPayment(e.target.value)}
+              >
+                <option value="all">All Payment Status</option>
+                <option value="paid">Active Payment</option>
+                <option value="needed">Payment Needed</option>
+              </Form.Select>
+            </Col>
+            <Col md={4} className="text-md-end mt-2 mt-md-0">
+              <Button
+                variant={showAddForm ? 'secondary' : 'primary'}
+                onClick={() => setShowAddForm((prev) => !prev)}
+              >
+                {showAddForm ? 'Close Add Member' : '+ Add Member'}
+              </Button>
+              <Button
+                variant="outline-primary"
+                size="sm"
+                className="ms-2"
+                onClick={() => handleExportExcel(filteredMembers)}
+              >
+                Export
+              </Button>
+            </Col>
+          </Row>
 
-      {/* Add Member form */}
-      {showAddForm && (
-        <Row className="mb-4">
-          <Col>
-            <Card>
-              <Card.Body>
-                <Card.Title>Add New Member</Card.Title>
-                <Form onSubmit={handleAddSubmit}>
-                  <Row className="mb-3">
-                    <Col md={4}>
-                      <Form.Group controlId="addId">
-                        <Form.Label>
-                          User ID<span className="text-danger">*</span>
-                        </Form.Label>
-                        <Form.Control
-                          type="text"
-                          name="id"
-                          value={addForm.id}
-                          onChange={handleAddInputChange}
-                          placeholder="e.g. B101"
-                          required
-                          isInvalid={!!idError}
-                        />
-                        <Form.Control.Feedback type="invalid">
-                          {idError}
-                        </Form.Control.Feedback>
-                      </Form.Group>
-                    </Col>
-                    <Col md={4}>
-                      <Form.Group controlId="addName">
-                        <Form.Label>
-                          Name<span className="text-danger">*</span>
-                        </Form.Label>
-                        <Form.Control
-                          type="text"
-                          name="name"
-                          value={addForm.name}
-                          onChange={handleAddInputChange}
-                          placeholder="Full name"
-                          required
-                        />
-                      </Form.Group>
-                    </Col>
-                    <Col md={4}>
-                      <Form.Group controlId="addCar">
-                        <Form.Label>Car</Form.Label>
-                        <Form.Control
-                          type="text"
-                          name="car"
-                          value={addForm.car}
-                          onChange={handleAddInputChange}
-                          placeholder="Car info"
-                        />
-                      </Form.Group>
-                    </Col>
-                  </Row>
+          {/* Add Member form */}
+          {showAddForm && (
+            <Row className="mb-3">
+              <Col>
+                <Card>
+                  <Card.Body>
+                    <Card.Title>Add New Member</Card.Title>
+                    <Form onSubmit={handleAddSubmit}>
+                      <Row className="mb-3">
+                        <Col md={4}>
+                          <Form.Group controlId="addId">
+                            <Form.Label>
+                              User ID <span className="text-danger">*</span>
+                            </Form.Label>
+                            <Form.Control
+                              type="text"
+                              name="id"
+                              value={addForm.id}
+                              onChange={handleAddInputChange}
+                              placeholder="e.g. B101"
+                              required
+                              isInvalid={!!idError}
+                            />
+                            <Form.Control.Feedback type="invalid">
+                              {idError}
+                            </Form.Control.Feedback>
+                          </Form.Group>
+                        </Col>
+                        <Col md={4}>
+                          <Form.Group controlId="addName">
+                            <Form.Label>
+                              Name <span className="text-danger">*</span>
+                            </Form.Label>
+                            <Form.Control
+                              type="text"
+                              name="name"
+                              value={addForm.name}
+                              onChange={handleAddInputChange}
+                              placeholder="Full name"
+                              required
+                            />
+                          </Form.Group>
+                        </Col>
+                        <Col md={4}>
+                          <Form.Group controlId="addCar">
+                            <Form.Label>Car</Form.Label>
+                            <Form.Control
+                              type="text"
+                              name="car"
+                              value={addForm.car}
+                              onChange={handleAddInputChange}
+                              placeholder="Car info"
+                            />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                      <Row className="mb-3">
+                        <Col md={3}>
+                          <Form.Group controlId="addIsActive">
+                            <Form.Check
+                              type="checkbox"
+                              label="Active"
+                              name="isActive"
+                              checked={addForm.isActive}
+                              onChange={handleAddInputChange}
+                            />
+                          </Form.Group>
+                        </Col>
+                        <Col md={3}>
+                          <Form.Group controlId="addValidPayment">
+                            <Form.Check
+                              type="checkbox"
+                              label="Valid Payment"
+                              name="validPayment"
+                              checked={addForm.validPayment}
+                              onChange={handleAddInputChange}
+                            />
+                          </Form.Group>
+                        </Col>
+                        <Col md={6}>
+                          <Form.Group controlId="addNotes">
+                            <Form.Label>Notes</Form.Label>
+                            <Form.Control
+                              as="textarea"
+                              rows={2}
+                              name="notes"
+                              value={addForm.notes}
+                              onChange={handleAddInputChange}
+                              placeholder="Additional notes"
+                            />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                      <div className="text-end">
+                        <Button type="submit" variant="success">
+                          Create Member
+                        </Button>
+                      </div>
+                    </Form>
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
+          )}
+        </div>
 
-                  <Row className="mb-3">
-                    <Col md={3}>
-                      <Form.Group controlId="addIsActive">
-                        <Form.Check
-                          type="checkbox"
-                          label="Active"
-                          name="isActive"
-                          checked={addForm.isActive}
-                          onChange={handleAddInputChange}
-                        />
-                      </Form.Group>
-                    </Col>
-                    <Col md={3}>
-                      <Form.Group controlId="addValidPayment">
-                        <Form.Check
-                          type="checkbox"
-                          label="Valid Payment"
-                          name="validPayment"
-                          checked={addForm.validPayment}
-                          onChange={handleAddInputChange}
-                        />
-                      </Form.Group>
-                    </Col>
-                    <Col md={6}>
-                      <Form.Group controlId="addNotes">
-                        <Form.Label>Notes</Form.Label>
-                        <Form.Control
-                          as="textarea"
-                          rows={2}
-                          name="notes"
-                          value={addForm.notes}
-                          onChange={handleAddInputChange}
-                          placeholder="Additional notes"
-                        />
-                      </Form.Group>
-                    </Col>
-                  </Row>
-
-                  <div className="text-end">
-                    <Button type="submit" variant="success">
-                      Create Member
-                    </Button>
-                  </div>
-                </Form>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-      )}
-
-      {/* Members table in scrollable box */}
-      <Container fluid className="d-flex flex-column" style={{ minHeight: '100vh' }}>
-        <Row className="flex-grow-1">
-          <Col>
-            <div
-              className="border rounded"
-              style={{
-                height: '100%',
-                minHeight: '400px',
-                overflowY: 'auto',
-                overflowX: 'auto',
-                width: '100%',
-              }}
-            >
+        {/* Scrollable table section */}
+        <Row className="table-section g-0"> {/* g-0 removes extra bootstrap gutter margins */}
+          <Col className="d-flex flex-column h-100"> {/* ADD h-100 HERE */}
+            <div className="border rounded table-scroll">
               {isLoading ? (
-                <div className="d-flex justify-content-center align-items-center py-5">
+                <div className="d-flex justify-content-center align-items-center h-100">
                   <Spinner animation="border" role="status" className="me-2" />
                   <span>Loading members...</span>
                 </div>
               ) : filteredMembers.length === 0 ? (
+                // ... existing no members code
                 <div className="p-3 text-center text-muted">No members found.</div>
               ) : (
                 <Table hover size="sm" className="mb-0 w-100">
-                  <thead className="table-light" style={{ position: 'sticky', top: 0, zIndex: 1 }}>
+                  <thead
+                    className="table-light"
+                    style={{ 
+                      position: 'sticky', 
+                      top: 0, 
+                      zIndex: 1020, /* Increased Z-Index to stay above row colors */
+                      boxShadow: '0 2px 2px -1px rgba(0,0,0,0.1)' /* Optional: Shadow for depth */
+                    }}
+                  >
                     <tr>
                       <th>ID</th>
                       <th>Name</th>
@@ -570,115 +576,9 @@ function MembersPage() {
           </Col>
         </Row>
       </Container>
-
-      {/* Edit Member Modal */}
-      <Modal show={showEditModal} onHide={() => setShowEditModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Edit Member</Modal.Title>
-        </Modal.Header>
-        <Form onSubmit={handleEditSubmit}>
-          <Modal.Body>
-            <Form.Group className="mb-3" controlId="editId">
-              <Form.Label>User ID (read-only)</Form.Label>
-              <Form.Control type="text" value={editForm.id} disabled />
-            </Form.Group>
-
-            <Form.Group className="mb-3" controlId="editName">
-              <Form.Label>Name</Form.Label>
-              <Form.Control
-                type="text"
-                name="name"
-                value={editForm.name}
-                onChange={handleEditInputChange}
-                required
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-3" controlId="editCar">
-              <Form.Label>Car</Form.Label>
-              <Form.Control
-                type="text"
-                name="car"
-                value={editForm.car}
-                onChange={handleEditInputChange}
-              />
-            </Form.Group>
-
-            <Row className="mb-3">
-              <Col md={6}>
-                <Form.Group controlId="editIsActive">
-                  <Form.Check
-                    type="checkbox"
-                    label="Active"
-                    name="isActive"
-                    checked={editForm.isActive}
-                    onChange={handleEditInputChange}
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group controlId="editValidPayment">
-                  <Form.Check
-                    type="checkbox"
-                    label="Valid Payment"
-                    name="validPayment"
-                    checked={editForm.validPayment}
-                    onChange={handleEditInputChange}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-
-            <Form.Group className="mb-3" controlId="editNotes">
-              <Form.Label>Notes</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                name="notes"
-                value={editForm.notes}
-                onChange={handleEditInputChange}
-              />
-            </Form.Group>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={() => setShowEditModal(false)}>
-              Cancel
-            </Button>
-            <Button variant="primary" type="submit">
-              Save Changes
-            </Button>
-          </Modal.Footer>
-        </Form>
-      </Modal>
-
-      {/* Delete Confirmation Modal */}
-      <Modal show={showDeleteModal} onHide={handleCancelDelete} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Confirm Delete</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {memberToDelete ? (
-            <>
-              Are you sure you want to delete member{' '}
-              <strong>{memberToDelete.name}</strong> (ID: {memberToDelete.id})?
-              This action cannot be undone.
-            </>
-          ) : (
-            'Are you sure you want to delete this member?'
-          )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCancelDelete}>
-            Cancel
-          </Button>
-          <Button variant="danger" onClick={handleConfirmDelete}>
-            Delete
-          </Button>
-        </Modal.Footer>
-      </Modal>
-      </Container>
     </>
   );
+
 }
 
 export default MembersPage;

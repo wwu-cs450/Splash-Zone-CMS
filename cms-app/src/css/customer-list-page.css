@@ -87,3 +87,38 @@
 :global(.text-muted-important) {
   color: var(--muted) !important;
 }
+
+/* ... existing root vars ... */
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  overflow: hidden; /* 1. PREVENT BODY SCROLLING */
+}
+
+.page-wrap {
+  display: flex;
+  flex-direction: column;
+  /* 2. SUBTRACT MENU HEIGHT (Adjust 56px to match your actual HamburgerMenu height) */
+  height: calc(100vh - 56px); 
+  overflow: hidden;
+}
+
+.header-section {
+  flex: 0 0 auto; /* Don't shrink/grow */
+}
+
+/* 3. FORCE TABLE SECTION TO FILL REMAINING SPACE */
+.table-section {
+  flex: 1 1 auto; 
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* CRITICAL for nested scrolling */
+}
+
+/* 4. DEFINE THE SCROLL AREA */
+.table-scroll {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  border-bottom: 1px solid #dee2e6; /* Optional: adds closure to bottom */
+}
