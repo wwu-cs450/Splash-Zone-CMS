@@ -7,79 +7,100 @@ import HamburgerMenu from '../components/hamburger-menu';
 import data from '../api/mock-user-data.json';
 
 import { Chart as ChartJS} from 'chart.js/auto';
-import {Doughnut} from 'react-chartjs-2';
-import { getAllMembers } from '../api/firebase-crud';
-
-class Member {
-  constructor(id, name, email, membershipTier, joinDate) {
-    this.id = id;
-    this.name = name;
-    this.email = email;
-    this.membershipTier = membershipTier;
-    this.joinDate = joinDate;
-  }
-// Helper function to count members by tier
-// Returns object with tier names as keys and counts as values
-// e.g. { 'Basic': 10, 'Ultimate': 5, 'Delux': 2 }
-function memberCountByTier(data) {
-  const tierCounts = {};
-  data.forEach((member) => {
-    const tier = member.membershipTier;
-    if (tierCounts[tier]) {
-      tierCounts[tier] += 1;
-    } else {
-      tierCounts[tier] = 1;
-    }
-  });
-  return tierCounts;
-}
-
-function TierChart({ data }) {
-  const chartData = {
-    labels: Object.keys(memberCountByTier(data)),
-    datasets: [
-      {
-        label: 'Membership Tiers',
-        data: Object.values(memberCountByTier(data)),
-        backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(41, 90, 123, 0.2)',
-          'rgba(255, 206, 86, 0.2)',
-        ],
-      },
-    ],
-  }
-  return <Doughnut data={chartData} />;
-}
-//const GraphView = () => <TierChart data={carData} />;
-const GraphView = () => <Card body className="content-card">Place Holder for graphs and analytics that will be imported</Card>;
-const DataTableView = () => <Card body className="content-card">Place Holder for data tables with raw data</Card>;
-const ExportOptions = () => <Card body className="content-card">Place Holder for export options like file type or attribute selection </Card>;
-
+import {Bar, Doughnut} from 'react-chartjs-2';
 
 function AnalyticsPage() {
   // Definition of state to track the active view
-  const [members, setMembers] = useState([]);
-  const [activeView, setActiveView] = useState('graphs');
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [filteredMembers, setFilteredMembers] = useState([]);
+  const [activeView, setActiveView] = useState('data');
 
-  // Load members from Firestore
-  const loadMembers = async () => {
-    setIsLoading(true);
-    setError('');
-    try {
-      const data = await getAllMembers();
-      setMembers(data);
-      setFilteredMembers(data);
-    } catch (err) {
-      console.error(err);
-      setError('Failed to load members. Please try again.');
-    } finally {
-      setIsLoading(false);
+  // Helper function to count members by tier
+  // Returns object with tier names as keys and counts as values
+  // e.g. { 'Basic': 10, 'Ultimate': 5, 'Delux': 2 }
+  function memberCountByTier(data) {
+    const tierCounts = {};
+    data.forEach((member) => {
+      const tier = member.memberTierCode;
+      if (tierCounts[tier]) {
+        tierCounts[tier] += 1;
+      } else {
+        tierCounts[tier] = 1;
+      }
+    });
+    return tierCounts;
+  }
+
+  function memberCountByStatus(data) {
+    const statusCounts = {};
+    data.forEach((member) => {
+      const isActive = member.isActive;
+      const current = member.dataUpdated;
+      let status;
+
+      if (isActive) {
+        if (current) {
+          status = 'Active & Current';
+        } else {
+          status = 'Active & Not Current';
+        }
+      } else {
+        if (current) {
+          status = 'Inactive & Current';
+        }
+        else {
+          status = 'Inactive & Not Current';
+        }
+      } 
+
+      // Count status occurrences
+      if (statusCounts[status]) {
+        statusCounts[status] += 1;
+      } else {
+        statusCounts[status] = 1;
+      }
+    });
+    return statusCounts;
+  }
+
+  function TierChart({ data }) {
+    const dict = memberCountByTier(data);
+    const chartData = {
+      labels: Object.keys(dict),
+      datasets: [
+        {
+          label: 'Membership Tiers',
+          data: Object.values(dict),
+        }
+      ]
     }
-  };
+    return <Doughnut data={chartData} />;
+  }
+
+  function StatusChart({ data }) {
+    const dict = memberCountByStatus(data);
+    const chartData = {
+      labels: Object.keys(dict),
+      datasets: [
+        {
+          label: 'Member status distribution',
+          data: Object.values(dict),
+        }
+      ]
+    }
+    return <Bar data={chartData} />;
+  }
+
+  //const GraphView = () => <TierChart data={carData} />;
+  const GraphView = () => (
+    <Card body className="content-card">
+      <h3 className="chart-title">Membership Tiers Distribution</h3>
+      <TierChart data={data}/>
+      <br />
+      <h3 className="chart-title">Placeholder for Additional Graphs</h3>
+      <StatusChart data={data}/>
+    </Card>
+  );
+  const DataTableView = () => <Card body className="content-card">Place Holder for data tables with raw data</Card>;
+  const ExportOptions = () => <Card body className="content-card">Place Holder for export options like file type or attribute selection </Card>;
 
   // Function to render content based on state
   const renderTab = () => {
