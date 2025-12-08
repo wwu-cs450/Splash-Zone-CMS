@@ -6,7 +6,6 @@ import '../css/analytics-page.css';
 import HamburgerMenu from '../components/hamburger-menu';
 import data from '../api/mock-user-data.json';
 
-import { Chart as ChartJS} from 'chart.js/auto';
 import {Bar, Doughnut} from 'react-chartjs-2';
 
 function AnalyticsPage() {
