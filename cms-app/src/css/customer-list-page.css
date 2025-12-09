@@ -266,10 +266,28 @@ html, body, #root {
     flex: 1; /* Buttons stretch full width */
   }
   
-  .search-input-group, 
-  .filter-select {
+  /* --- TOOLBAR FIXES FOR INLINE FILTERS --- */
+  
+  .toolbar-wrapper {
+    padding-left: 0;
+    gap: 8px; /* Tighter gap for mobile */
+  }
+  
+  /* SEARCH BAR: Force to full width (Row 1) */
+  .search-input-group {
     width: 100% !important;
     max-width: 100% !important;
+    margin-right: 0 !important;
+  }
+  
+  /* FILTERS: Share the width equally (Row 2) */
+  .filter-select {
+    width: auto !important; /* Stop forcing 100% */
+    flex: 1;                /* Grow to fill space equally */
+    min-width: 0;           /* Allow shrinking if text is long */
+    padding-left: 0.5rem;   /* Tighten padding slightly for small screens */
+    padding-right: 1.5rem !important; /* Reduce right padding so text fits */
+    background-position: right 0.2rem center; /* Move arrow closer to edge */
   }
 }
 
