@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import "../css/customer-search-page.css";
-import { getMember } from "../api/firebase-crud";
+import { useMembers } from "../context/MembersContext";
 import HamburgerMenu from "../components/hamburger-menu";
 
 function CustomerSearchPage() {
+  const { getMember } = useMembers();
+
   const [code, setCode] = useState("");
   const [memberData, setMemberData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -11,7 +13,7 @@ function CustomerSearchPage() {
 
   const handleInput = (value) => {
     setCode((prev) => {
-      if (prev.length >= 4) return prev;
+      if (prev.length >= 5) return prev;
       return prev + value.toUpperCase();
     });
   };
@@ -21,8 +23,8 @@ function CustomerSearchPage() {
   };
 
   const handleSubmit = async () => {
-    if (!/^[BDU]\d{3}$/.test(code)) {
-      setError("Code must be B/D/U + 3 digits (example: B123)");
+    if (!/^[BDU]\d{3,4}$/.test(code)) {
+      setError("Code must be B/D/U + 3 or 4 digits (example: B123/B1234)");
       return;
     }
 
@@ -187,7 +189,7 @@ function CustomerSearchPage() {
           <button
             onClick={handleSubmit}
             className="submit-btn"
-            disabled={!/^[BDU]\d{3}$/.test(code) || loading}
+            disabled={!/^[BDU]\d{3,4}$/.test(code) || loading}
             aria-label="Submit customer code"
           >
             ✓
@@ -199,3 +201,5 @@ function CustomerSearchPage() {
 }
 
 export default CustomerSearchPage;
+
+// adding a comment so I can push this branch to github

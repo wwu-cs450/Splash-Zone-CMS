@@ -17,24 +17,17 @@ import {
   Card,
 } from 'react-bootstrap';
 
-// 🔁 Adjust this import path to wherever you defined these functions
-import {
-  getAllMembers,
-  createMember,
-  updateMember,
-  deleteMember,
-} from '../api/firebase-crud';
+import { useMembers } from '../context/MembersContext';
 
 import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import HamburgerMenu from '../components/hamburger-menu';
 
 function MembersPage() {
-  const [members, setMembers] = useState([]);
+  const { members, isLoading, error: contextError, createMember, updateMember, deleteMember } = useMembers();
+
   const [filteredMembers, setFilteredMembers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [idError, setIdError] = useState('');
 
@@ -63,22 +56,6 @@ function MembersPage() {
   // Delete confirmation modal state
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [memberToDelete, setMemberToDelete] = useState(null);
-
-  // Load members from Firestore
-  const loadMembers = async () => {
-    setIsLoading(true);
-    setError('');
-    try {
-      const data = await getAllMembers();
-      setMembers(data);
-      setFilteredMembers(data);
-    } catch (err) {
-      console.error(err);
-      setError('Failed to load members. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const [filterSubscription, setFilterSubscription] = useState('all');
   const [filterActive, setFilterActive] = useState('all');
@@ -257,7 +234,6 @@ function MembersPage() {
       };
 
       await updateMember(editForm.id, updates);
-      await loadMembers();
       setShowEditModal(false);
     } catch (err) {
       console.error(err);
@@ -276,7 +252,6 @@ function MembersPage() {
     setError('');
     try {
       await deleteMember(memberToDelete.id);
-      await loadMembers();
       setShowDeleteModal(false);
       setMemberToDelete(null);
     } catch (err) {
