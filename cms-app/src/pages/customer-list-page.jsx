@@ -490,15 +490,8 @@ function MembersPage() {
                         member.validPayment === 1 ||
                         member.validPayment === '1';
 
-                      let rowClass = '';
-                      if (!isActive) {
-                        rowClass = 'member-row--inactive';
-                      } else if (!validPayment) {
-                        rowClass = 'member-row--payment-issue';
-                      }
-
                       return (
-                        <tr key={member.id} className={rowClass}>
+                        <tr key={member.id}>
                           {/* Truncate with Tooltip for ID, Name, Car, Notes */}
                           <td title={member.id}>
                             {member.id}
