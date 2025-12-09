@@ -85,9 +85,11 @@
   border-collapse: separate; 
   border-spacing: 0;
   
-  /* ADD THIS: This stops the table from wobbling when data changes */
   table-layout: fixed; 
   width: 100%; 
+  
+  /* Forces the table to stay wide enough to be readable. On mobile, this triggers the horizontal scrollbar. */
+  min-width: 800px; 
 }
 
 /* 2. ADD THE TRUNCATE CLASS (For ID, Name, Car, Notes) */
@@ -131,9 +133,10 @@ html, body, #root {
 /* 4. DEFINE THE SCROLL AREA */
 .table-scroll {
   flex: 1 1 auto;
-  overflow-y: auto;
+  overflow: auto; /* Changed from overflow-y: auto to allow horizontal scroll too */
   border-bottom: 1px solid #dee2e6;
-  position: relative; /* Helps anchor the scroll context */
+  position: relative;
+  scrollbar-gutter: stable;
 }
 
 /* Force sticky headers via CSS */
@@ -152,4 +155,71 @@ html, body, #root {
   
   /* Fix for Bootstrap borders on sticky elements */
   border-top: none !important;
+}
+
+/* --- TOOLBAR STYLING --- */
+
+/* Wrapper for the Search/Filter/Button area */
+.toolbar-wrapper {
+  display: flex;
+  flex-wrap: wrap; /* Allows items to wrap on mobile */
+  gap: 10px;       /* Consistent spacing between all items */
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+/* Grouping the left side controls (Search + Filters) */
+.toolbar-left {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  flex-grow: 1; /* Pushes the right-side buttons to the end */
+}
+
+/* Grouping the right side buttons */
+.toolbar-right {
+  display: flex;
+  gap: 10px;
+}
+
+/* Make inputs look cleaner */
+.search-input-group {
+  min-width: 250px; /* Search bar shouldn't get too small */
+  max-width: 350px; /* ...but shouldn't take up the whole screen on desktop */
+}
+
+.filter-select {
+  width: auto !important;     /* Let text dictate width, or... */
+  min-width: 140px;           /* ...enforce a minimum width */
+  max-width: 200px;
+  background-color: #fff;
+}
+
+/* Hamburger Fix: Ensure title isn't hidden behind the menu button */
+.page-title-row {
+  margin-left: 50px; /* Adjust based on the actual width of your hamburger button */
+  align-items: center;
+}
+
+/* MOBILE OVERRIDES */
+@media (max-width: 768px) {
+  .search-input-group, 
+  .filter-select,
+  .toolbar-left,
+  .toolbar-right {
+    width: 100% !important;     /* Full width on phones */
+    max-width: 100% !important;
+  }
+  
+  .toolbar-right {
+    justify-content: stretch;
+  }
+  
+  .toolbar-right .btn {
+    flex: 1; /* Make buttons equal width on mobile */
+  }
+
+  .page-title-row {
+    margin-left: 60px; /* More space on mobile if button is larger */
+  }
 }

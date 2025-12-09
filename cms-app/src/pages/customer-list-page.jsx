@@ -296,9 +296,10 @@ function MembersPage() {
       <Container fluid className="page-wrap">
         {/* Header + controls */}
         <div className="header-section py-3">
-          <Row className="mb-3">
+          {/* 1. Title Row with spacing for Hamburger */}
+          <Row className="mb-4 page-title-row">
             <Col>
-              <h2>Customer List</h2>
+              <h2 className="m-0">Customer List</h2>
             </Col>
           </Row>
 
@@ -310,84 +311,94 @@ function MembersPage() {
             </Row>
           )}
 
-          {/* Search + filters + add member */}
-          <Row className="align-items-center mb-3">
-            <Col md={8}>
-              <InputGroup>
-                <InputGroup.Text>
-                  <FontAwesomeIcon icon={faSearch} />
+          {/* 2. THE NEW TOOLBAR */}
+          <div className="toolbar-wrapper">
+            
+            {/* LEFT SIDE: Search + Filters */}
+            <div className="toolbar-left">
+              {/* Search */}
+              <InputGroup className="search-input-group">
+                <InputGroup.Text className="bg-white border-end-0">
+                  <FontAwesomeIcon icon={faSearch} className="text-muted" />
                 </InputGroup.Text>
                 <Form.Control
                   type="text"
-                  placeholder="Search by Name or 'Subscription Letter + ID'"
+                  placeholder="Search by Name or ID"
+                  className="border-start-0 ps-0"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </InputGroup>
 
+              {/* Filter: Subscription */}
               <Form.Select
-                className="w-25 me-2"
+                className="filter-select"
                 value={filterSubscription}
                 onChange={(e) => setFilterSubscription(e.target.value)}
               >
-                <option value="all">All Subscription Levels</option>
-                <option value="B">B (Basic)</option>
-                <option value="D">D (Deluxe)</option>
-                <option value="U">U (Ultimate)</option>
+                <option value="all">Level: All</option>
+                <option value="B">Basic (B)</option>
+                <option value="D">Deluxe (D)</option>
+                <option value="U">Ultimate (U)</option>
               </Form.Select>
 
+              {/* Filter: Active */}
               <Form.Select
-                className="w-25 me-2"
+                className="filter-select"
                 value={filterActive}
                 onChange={(e) => setFilterActive(e.target.value)}
               >
-                <option value="all">All Members</option>
-                <option value="active">Active Members</option>
-                <option value="inactive">Inactive Members</option>
+                <option value="all">Status: All</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
               </Form.Select>
 
+              {/* Filter: Payment */}
               <Form.Select
-                className="w-25"
+                className="filter-select"
                 value={filterPayment}
                 onChange={(e) => setFilterPayment(e.target.value)}
               >
-                <option value="all">All Payment Status</option>
-                <option value="paid">Active Payment</option>
-                <option value="needed">Payment Needed</option>
+                <option value="all">Payment: All</option>
+                <option value="paid">Paid</option>
+                <option value="needed">Needed</option>
               </Form.Select>
-            </Col>
-            <Col md={4} className="text-md-end mt-2 mt-md-0">
+            </div>
+
+            {/* RIGHT SIDE: Actions */}
+            <div className="toolbar-right">
               <Button
-                variant={showAddForm ? 'secondary' : 'primary'}
-                onClick={() => setShowAddForm((prev) => !prev)}
-              >
-                {showAddForm ? 'Close Add Member' : '+ Add Member'}
-              </Button>
-              <Button
-                variant="outline-primary"
-                size="sm"
-                className="ms-2"
+                variant="outline-secondary"
                 onClick={() => handleExportExcel(filteredMembers)}
               >
                 Export
               </Button>
-            </Col>
-          </Row>
+              <Button
+                variant="primary"
+                onClick={() => setShowAddForm((prev) => !prev)}
+              >
+                {showAddForm ? 'Close' : '+ Add Member'}
+              </Button>
+            </div>
+          </div>
 
-          {/* Add Member form */}
+          {/* Add Member Form (Existing Logic) */}
           {showAddForm && (
             <Row className="mb-3">
               <Col>
-                <Card>
-                  <Card.Body>
-                    <Card.Title>Add New Member</Card.Title>
+                <Card className="shadow-sm border-0">
+                  <Card.Body className="p-4">
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                      <Card.Title className="mb-0">Add New Member</Card.Title>
+                      <Button variant="close" onClick={() => setShowAddForm(false)} />
+                    </div>
+                    
                     <Form onSubmit={handleAddSubmit}>
+                      {/* ... Your Existing Form Code Goes Here ... */}
                       <Row className="mb-3">
                         <Col md={4}>
                           <Form.Group controlId="addId">
-                            <Form.Label>
-                              User ID <span className="text-danger">*</span>
-                            </Form.Label>
+                            <Form.Label>ID <span className="text-danger">*</span></Form.Label>
                             <Form.Control
                               type="text"
                               name="id"
@@ -397,80 +408,22 @@ function MembersPage() {
                               required
                               isInvalid={!!idError}
                             />
-                            <Form.Control.Feedback type="invalid">
-                              {idError}
-                            </Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">{idError}</Form.Control.Feedback>
                           </Form.Group>
                         </Col>
-                        <Col md={4}>
-                          <Form.Group controlId="addName">
-                            <Form.Label>
-                              Name <span className="text-danger">*</span>
-                            </Form.Label>
-                            <Form.Control
-                              type="text"
-                              name="name"
-                              value={addForm.name}
-                              onChange={handleAddInputChange}
-                              placeholder="Full name"
-                              required
-                            />
-                          </Form.Group>
-                        </Col>
-                        <Col md={4}>
-                          <Form.Group controlId="addCar">
-                            <Form.Label>Car</Form.Label>
-                            <Form.Control
-                              type="text"
-                              name="car"
-                              value={addForm.car}
-                              onChange={handleAddInputChange}
-                              placeholder="Car info"
-                            />
-                          </Form.Group>
-                        </Col>
+                        {/* ... rest of your form ... */}
+                        <Col md={4}><Form.Group><Form.Label>Name</Form.Label><Form.Control type="text" name="name" value={addForm.name} onChange={handleAddInputChange} required /></Form.Group></Col>
+                        <Col md={4}><Form.Group><Form.Label>Car</Form.Label><Form.Control type="text" name="car" value={addForm.car} onChange={handleAddInputChange} /></Form.Group></Col>
                       </Row>
+                      
                       <Row className="mb-3">
-                        <Col md={3}>
-                          <Form.Group controlId="addIsActive">
-                            <Form.Check
-                              type="checkbox"
-                              label="Active"
-                              name="isActive"
-                              checked={addForm.isActive}
-                              onChange={handleAddInputChange}
-                            />
-                          </Form.Group>
-                        </Col>
-                        <Col md={3}>
-                          <Form.Group controlId="addValidPayment">
-                            <Form.Check
-                              type="checkbox"
-                              label="Valid Payment"
-                              name="validPayment"
-                              checked={addForm.validPayment}
-                              onChange={handleAddInputChange}
-                            />
-                          </Form.Group>
-                        </Col>
-                        <Col md={6}>
-                          <Form.Group controlId="addNotes">
-                            <Form.Label>Notes</Form.Label>
-                            <Form.Control
-                              as="textarea"
-                              rows={2}
-                              name="notes"
-                              value={addForm.notes}
-                              onChange={handleAddInputChange}
-                              placeholder="Additional notes"
-                            />
-                          </Form.Group>
-                        </Col>
+                         <Col md={3}><Form.Check type="checkbox" label="Active" name="isActive" checked={addForm.isActive} onChange={handleAddInputChange} /></Col>
+                         <Col md={3}><Form.Check type="checkbox" label="Valid Payment" name="validPayment" checked={addForm.validPayment} onChange={handleAddInputChange} /></Col>
+                         <Col md={6}><Form.Control as="textarea" rows={1} name="notes" placeholder="Notes" value={addForm.notes} onChange={handleAddInputChange} /></Col>
                       </Row>
+
                       <div className="text-end">
-                        <Button type="submit" variant="success">
-                          Create Member
-                        </Button>
+                        <Button type="submit" variant="success">Create Member</Button>
                       </div>
                     </Form>
                   </Card.Body>
@@ -528,7 +481,7 @@ function MembersPage() {
                       return (
                         <tr key={member.id} className={rowClass}>
                           {/* Truncate with Tooltip for ID, Name, Car, Notes */}
-                          <td className="cell-truncate" title={member.id}>
+                          <td title={member.id}>
                             {member.id}
                           </td>
                           <td className="cell-truncate" title={member.name}>
