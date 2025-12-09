@@ -65,8 +65,10 @@ export const MembersProvider = ({ children, user }) => {
 
       const memberFromDB = await getMemberFromDB(id);
 
-      if (memberFromDB && !members.find((m) => m.id === memberFromDB.id)) {
-        setMembers((prev) => [...prev, memberFromDB]);
+      if (memberFromDB) {
+        setMembers((prev) =>
+          prev.find((m) => m.id === memberFromDB.id) ? prev : [...prev, memberFromDB]
+        );
       }
 
       return memberFromDB;

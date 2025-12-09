@@ -70,6 +70,10 @@ function rowHasColor(row, colorType) {
  * @returns {Promise<Object>} - Results object with success/error counts
  */
 export async function uploadCustomerRecordsFromFile(file, createMember) {
+  if (!createMember || typeof createMember !== 'function') {
+    throw new Error('createMember must be a function');
+  }
+
   const workbook = new ExcelJS.Workbook();
   const results = {
     total: 0,
@@ -181,6 +185,10 @@ export async function uploadCustomerRecordsFromFile(file, createMember) {
  * @returns {Promise<Object>} - Results object with success/error counts
  */
 export async function uploadCustomerRecords(filePath, createMember) {
+  if (!createMember || typeof createMember !== 'function') {
+    throw new Error('createMember must be a function');
+  }
+  
   const workbook = new ExcelJS.Workbook();
   const results = {
     total: 0,
