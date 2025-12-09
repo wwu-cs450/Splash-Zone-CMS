@@ -296,77 +296,14 @@ function MembersPage() {
       <Container fluid className="page-wrap">
         {/* Header + controls */}
         <div className="header-section py-3">
-          {/* 1. Title Row with spacing for Hamburger */}
-          <Row className="mb-4 page-title-row">
-            <Col>
-              <h2 className="m-0">Customer List</h2>
-            </Col>
-          </Row>
+          
+          {/* --- ROW 1: HEADER (Title & Global Actions) --- */}
+          <div className="page-header-row">
+            {/* Title */}
+            <h1 className="page-title">Customer List</h1>
 
-          {error && (
-            <Row className="mb-3">
-              <Col>
-                <Alert variant="danger">{error}</Alert>
-              </Col>
-            </Row>
-          )}
-
-          {/* 2. THE NEW TOOLBAR */}
-          <div className="toolbar-wrapper">
-            
-            {/* LEFT SIDE: Search + Filters */}
-            <div className="toolbar-left">
-              {/* Search */}
-              <InputGroup className="search-input-group">
-                <InputGroup.Text className="bg-white border-end-0">
-                  <FontAwesomeIcon icon={faSearch} className="text-muted" />
-                </InputGroup.Text>
-                <Form.Control
-                  type="text"
-                  placeholder="Search by Name or ID"
-                  className="border-start-0 ps-0"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </InputGroup>
-
-              {/* Filter: Subscription */}
-              <Form.Select
-                className="filter-select"
-                value={filterSubscription}
-                onChange={(e) => setFilterSubscription(e.target.value)}
-              >
-                <option value="all">Level: All</option>
-                <option value="B">Basic (B)</option>
-                <option value="D">Deluxe (D)</option>
-                <option value="U">Ultimate (U)</option>
-              </Form.Select>
-
-              {/* Filter: Active */}
-              <Form.Select
-                className="filter-select"
-                value={filterActive}
-                onChange={(e) => setFilterActive(e.target.value)}
-              >
-                <option value="all">Status: All</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-              </Form.Select>
-
-              {/* Filter: Payment */}
-              <Form.Select
-                className="filter-select"
-                value={filterPayment}
-                onChange={(e) => setFilterPayment(e.target.value)}
-              >
-                <option value="all">Payment: All</option>
-                <option value="paid">Paid</option>
-                <option value="needed">Needed</option>
-              </Form.Select>
-            </div>
-
-            {/* RIGHT SIDE: Actions */}
-            <div className="toolbar-right">
+            {/* Actions (Moved Up!) */}
+            <div className="header-actions">
               <Button
                 variant="outline-secondary"
                 onClick={() => handleExportExcel(filteredMembers)}
@@ -375,14 +312,77 @@ function MembersPage() {
               </Button>
               <Button
                 variant="primary"
+                className="fw-bold" // Bold text for emphasis
                 onClick={() => setShowAddForm((prev) => !prev)}
               >
-                {showAddForm ? 'Close' : '+ Add Member'}
+                {showAddForm ? 'Close' : '+ New Member'}
               </Button>
             </div>
           </div>
 
-          {/* Add Member Form (Existing Logic) */}
+          {/* Error Alert */}
+          {error && (
+            <Row className="mb-3 px-4">
+              <Col><Alert variant="danger">{error}</Alert></Col>
+            </Row>
+          )}
+
+          {/* --- ROW 2: TOOLBAR (Search & Filters) --- */}
+          <div className="toolbar-wrapper">
+            
+            {/* Search - Takes up available space */}
+            <InputGroup className="search-input-group">
+              <InputGroup.Text className="bg-white border-end-0 text-muted">
+                <FontAwesomeIcon icon={faSearch} />
+              </InputGroup.Text>
+              <Form.Control
+                type="text"
+                placeholder="Search by Name or ID"
+                className="border-start-0 ps-0"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </InputGroup>
+
+            {/* Filter: Level */}
+            <Form.Select
+              className="filter-select"
+              value={filterSubscription}
+              onChange={(e) => setFilterSubscription(e.target.value)}
+              style={{ width: 'auto', minWidth: '130px' }}
+            >
+              <option value="all">Level: All</option>
+              <option value="B">Basic</option>
+              <option value="D">Deluxe</option>
+              <option value="U">Ultimate</option>
+            </Form.Select>
+
+            {/* Filter: Status */}
+            <Form.Select
+              className="filter-select"
+              value={filterActive}
+              onChange={(e) => setFilterActive(e.target.value)}
+              style={{ width: 'auto', minWidth: '130px' }}
+            >
+              <option value="all">Status: All</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </Form.Select>
+
+            {/* Filter: Payment */}
+            <Form.Select
+              className="filter-select"
+              value={filterPayment}
+              onChange={(e) => setFilterPayment(e.target.value)}
+              style={{ width: 'auto', minWidth: '145px' }}
+            >
+              <option value="all">Payment: All</option>
+              <option value="paid">Paid</option>
+              <option value="needed">Needed</option>
+            </Form.Select>
+          </div>
+
+          {/* Add Member Form (Keep existing logic) */}
           {showAddForm && (
             <Row className="mb-3">
               <Col>
@@ -449,10 +449,10 @@ function MembersPage() {
                   <thead className="table-light">
                     <tr>
                       <th style={{ width: '10%' }}>ID</th>
-                      <th style={{ width: '20%' }}>Name</th>
-                      <th style={{ width: '15%' }}>Car</th>
-                      <th style={{ width: '10%' }}>Active</th>
-                      <th style={{ width: '10%' }}>Valid Payment</th>
+                      <th style={{ width: '20%' }}>Member</th>
+                      <th style={{ width: '15%' }}>Vehicle</th>
+                      <th className="text-center" style={{ width: '10%' }}>Status</th>
+                      <th className="text-center" style={{ width: '10%' }}>Payment</th>
                       <th style={{ width: '25%' }}>Notes</th>
                       <th className="text-end" style={{ width: '10%' }}></th>
                     </tr>
@@ -492,8 +492,18 @@ function MembersPage() {
                           </td>
 
                           {/* Standard Boolean Columns */}
-                          <td>{isActive ? 'Yes' : 'No'}</td>
-                          <td>{validPayment ? 'Yes' : 'No'}</td>
+                          <td className="text-center">
+                            {isActive 
+                              ? <span className="badge bg-success">Active</span> 
+                              : <span className="badge bg-secondary">Inactive</span>
+                            }
+                          </td>
+                          <td className="text-center">
+                            {validPayment 
+                              ? <span className="badge bg-success">Paid</span> 
+                              : <span className="badge bg-danger">Needed</span>
+                            }
+                          </td>
 
                           <td className="cell-truncate" title={member.notes}>
                             {member.notes}

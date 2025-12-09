@@ -157,69 +157,105 @@ html, body, #root {
   border-top: none !important;
 }
 
-/* --- TOOLBAR STYLING --- */
+/* --- 1. PAGE HEADER (Title + Actions) --- */
 
-/* Wrapper for the Search/Filter/Button area */
+/* The container for Title (left) and Buttons (right) */
+.page-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem; /* Space between Header and Search bar */
+  
+  /* Critical: Adds space so the Hamburger doesn't cover the text */
+  padding-left: 75px;
+  padding-top: 12px;
+  padding-right: 1rem; 
+}
+
+/* The Title Typography - The "Pro" Look */
+.page-title {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-weight: 700;       /* Bold */
+  font-size: 1.75rem;     /* ~28px */
+  color: #111827;         /* Dark Gray (Not pure black) */
+  letter-spacing: -0.025em; /* Tightens letters slightly */
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* Container for Export/Add Buttons */
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* --- 2. TOOLBAR (Search + Filters) --- */
+
 .toolbar-wrapper {
   display: flex;
-  flex-wrap: wrap; /* Allows items to wrap on mobile */
-  gap: 10px;       /* Consistent spacing between all items */
+  flex-wrap: wrap; 
+  gap: 12px; 
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0;
+  padding-left: 0; /* Align with table */
+  padding-right: 0;
 }
 
-/* Grouping the left side controls (Search + Filters) */
-.toolbar-left {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  flex-grow: 1; /* Pushes the right-side buttons to the end */
-}
-
-/* Grouping the right side buttons */
-.toolbar-right {
-  display: flex;
-  gap: 10px;
-}
-
-/* Make inputs look cleaner */
+/* Search bar grows to fill space */
 .search-input-group {
-  min-width: 250px; /* Search bar shouldn't get too small */
-  max-width: 350px; /* ...but shouldn't take up the whole screen on desktop */
+  flex-grow: 1;           
+  min-width: 240px;
+  max-width: 450px;       
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
-.filter-select {
-  width: auto !important;     /* Let text dictate width, or... */
-  min-width: 140px;           /* ...enforce a minimum width */
-  max-width: 200px;
-  background-color: #fff;
+/* Inputs: Cleaner and Taller */
+.form-control, .form-select {
+  border-color: #e5e7eb;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.95rem;
+  border-radius: 6px;
 }
 
-/* Hamburger Fix: Ensure title isn't hidden behind the menu button */
-.page-title-row {
-  margin-left: 50px; /* Adjust based on the actual width of your hamburger button */
-  align-items: center;
+.form-control:focus, .form-select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  outline: none;
 }
 
-/* MOBILE OVERRIDES */
+/* --- MOBILE RESPONSIVENESS --- */
 @media (max-width: 768px) {
-  .search-input-group, 
-  .filter-select,
-  .toolbar-left,
-  .toolbar-right {
-    width: 100% !important;     /* Full width on phones */
-    max-width: 100% !important;
-  }
-  
-  .toolbar-right {
-    justify-content: stretch;
-  }
-  
-  .toolbar-right .btn {
-    flex: 1; /* Make buttons equal width on mobile */
+  .page-header-row {
+    flex-direction: column; /* Stack Title and Buttons */
+    align-items: stretch;
+    gap: 1rem;
+    padding-left: 0;
+    padding-top: 0;
   }
 
-  .page-title-row {
-    margin-left: 60px; /* More space on mobile if button is larger */
+  .page-title {
+    /* Title keeps its distance from the fixed hamburger */
+    margin-left: 60px; 
+    margin-top: 6px;
+    align-self: flex-start; /* Ensure it doesn't stretch weirdly */
+  }
+  
+  .toolbar-wrapper {
+    padding-left: 0; /* Reset padding on mobile for filters */
+  }
+
+  .header-actions {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .header-actions .btn {
+    flex: 1; /* Buttons stretch full width */
+  }
+  
+  .search-input-group, 
+  .filter-select {
+    width: 100% !important;
+    max-width: 100% !important;
   }
 }
