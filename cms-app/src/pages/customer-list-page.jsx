@@ -472,8 +472,8 @@ function MembersPage() {
                       <th style={{ width: '15%' }}>Vehicle</th>
                       <th className="text-center" style={{ width: '10%' }}>Status</th>
                       <th className="text-center" style={{ width: '10%' }}>Payment</th>
-                      <th style={{ width: '25%' }}>Notes</th>
-                      <th className="text-end" style={{ width: '10%' }}></th>
+                      <th style={{ width: '18%' }}>Notes</th>
+                      <th className="text-end" style={{ width: '17%' }}></th>
                     </tr>
                   </thead>
                   <tbody>
