@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { createMember } from '../api/firebase-crud';
+import { useMembers } from '../context/MembersContext';
 import { uploadCustomerRecordsFromFile } from '../utils/excel-upload';
 import HamburgerMenu from '../components/hamburger-menu';
 
 function UploadPage() {
+  const { createMember } = useMembers();
+
   const [message, setMessage] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadResults, setUploadResults] = useState(null);
@@ -48,7 +50,7 @@ function UploadPage() {
       setMessage('Uploading Excel file and creating members...');
       setUploadResults(null);
 
-      const results = await uploadCustomerRecordsFromFile(selectedFile);
+      const results = await uploadCustomerRecordsFromFile(selectedFile, createMember);
 
       setUploadResults(results);
       setMessage('Upload complete! See results below.');
@@ -60,12 +62,18 @@ function UploadPage() {
   };
 
   return (
-    <div style={{ padding: '20px' }}>
+    <div style={{ padding: '20px', maxWidth: '1000px', margin: '0 auto' }}>
       <HamburgerMenu />
       <h1>Test Page</h1>
 
-      <div style={{ marginBottom: '30px' }}>
-        <h2>Single Member Test</h2>
+      <div style={{ 
+        marginBottom: '30px', 
+        padding: '20px', 
+        border: '1px solid #e0e0e0', 
+        borderRadius: '8px',
+        backgroundColor: '#fafafa'
+      }}>
+        <h2 style={{ marginTop: 0 }}>Single Member Test</h2>
         <button
           onClick={handleCreateMember}
           style={{
@@ -75,31 +83,50 @@ function UploadPage() {
             color: 'white',
             border: 'none',
             borderRadius: '4px',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            minWidth: '150px'
           }}
         >
           Create Test Member
         </button>
       </div>
 
-      <div style={{ marginBottom: '30px' }}>
-        <h2>Excel Upload</h2>
+      <div style={{ 
+        marginBottom: '30px', 
+        padding: '20px', 
+        border: '1px solid #e0e0e0', 
+        borderRadius: '8px',
+        backgroundColor: '#fafafa'
+      }}>
+        <h2 style={{ marginTop: 0 }}>Excel Upload</h2>
 
-        <div style={{ marginBottom: '10px' }}>
+        <div style={{ marginBottom: '15px' }}>
           <input
             type="file"
             accept=".xlsx,.xls"
             onChange={handleFileSelect}
             style={{
-              padding: '5px',
-              fontSize: '14px'
+              padding: '8px',
+              fontSize: '14px',
+              border: '1px solid #ddd',
+              borderRadius: '4px',
+              width: '100%',
+              maxWidth: '600px'
             }}
           />
         </div>
 
         {selectedFile && (
-          <p style={{ fontSize: '14px', color: '#666', marginBottom: '10px' }}>
-            Selected: {selectedFile.name}
+          <p style={{ 
+            fontSize: '14px', 
+            color: '#666', 
+            marginBottom: '15px',
+            padding: '8px',
+            backgroundColor: '#e8f5e8',
+            borderRadius: '4px',
+            border: '1px solid #4CAF50'
+          }}>
+            Selected file: <strong>{selectedFile.name}</strong>
           </p>
         )}
 
@@ -113,7 +140,8 @@ function UploadPage() {
             color: 'white',
             border: 'none',
             borderRadius: '4px',
-            cursor: selectedFile ? 'pointer' : 'not-allowed'
+            cursor: selectedFile ? 'pointer' : 'not-allowed',
+            minWidth: '150px'
           }}
         >
           Upload Excel File

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Stack from 'react-bootstrap/Stack';
 import Card from 'react-bootstrap/Card';
@@ -17,7 +17,7 @@ function AnalyticsPage() {
 
   // Function to render content based on state
   const renderTab = () => {
-    switch(activeView) {
+    switch (activeView) {
       case 'graphs': return <GraphView />;
       case 'data': return <DataTableView />;
       case 'export': return <ExportOptions />;
@@ -27,21 +27,23 @@ function AnalyticsPage() {
 
   // Main render
   return (
-    <div className="p-4">
+    <div className="p-3">
       <HamburgerMenu />
-      <h1 className="mb-4">Analytics Dashboard</h1>
-      <Stack direction="horizontal" gap={3} className='mb-4'>
-        <Button variant={activeView === 'graphs' ? 'primary' : 'outline-primary'} onClick={() => setActiveView('graphs')}>
-          View Graphs
-        </Button>
-        <Button variant={activeView === 'data' ? 'primary' : 'outline-primary'} onClick={() => setActiveView('data')}>
-          View Raw Data
-        </Button>
-        <Button variant={activeView === 'export' ? 'primary' : 'outline-primary'} onClick={() => setActiveView('export')}>
-          Export Data
-        </Button>
-      </Stack>
-      {renderTab()}
+      <div style={{ marginLeft: '60px' }}>
+        <h1 className="mb-3">Analytics Dashboard</h1>
+        <Stack direction="horizontal" gap={30} className='mb-3'>
+          <Button variant={activeView === 'graphs' ? 'primary' : 'outline-primary'} onClick={() => setActiveView('graphs')}>
+            View Graphs
+          </Button>
+          <Button variant={activeView === 'data' ? 'primary' : 'outline-primary'} onClick={() => setActiveView('data')}>
+            View Raw Data
+          </Button>
+          <Button variant={activeView === 'export' ? 'primary' : 'outline-primary'} onClick={() => setActiveView('export')}>
+            Export Data
+          </Button>
+        </Stack>
+        {renderTab()}
+      </div>
     </div>
   );
 }
