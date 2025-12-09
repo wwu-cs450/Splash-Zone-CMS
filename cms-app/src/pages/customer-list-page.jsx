@@ -374,7 +374,7 @@ function MembersPage() {
               className="filter-select"
               value={filterPayment}
               onChange={(e) => setFilterPayment(e.target.value)}
-              style={{ width: 'auto', minWidth: '145px' }}
+              style={{ width: 'auto', minWidth: '145' }}
             >
               <option value="all">Payment: All</option>
               <option value="paid">Paid</option>

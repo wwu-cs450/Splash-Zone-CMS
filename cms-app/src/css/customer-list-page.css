@@ -225,12 +225,49 @@ html, body, #root {
 
 /* --- MOBILE RESPONSIVENESS --- */
 @media (max-width: 768px) {
+  /* 1. Unlock the body height so the browser scrollbar appears */
+  html, body, #root {
+    height: auto !important;
+    overflow-y: auto !important; /* Force scrollbar */
+  }
+
+  /* 2. Let the page wrapper grow as tall as the content needs */
+  .page-wrap {
+    height: auto !important; 
+    overflow: visible !important;
+    display: block !important; /* Remove flex constraints */
+  }
+
   .page-header-row {
     flex-direction: column; /* Stack Title and Buttons */
     align-items: stretch;
     gap: 1rem;
     padding-left: 0;
     padding-top: 0;
+  }
+
+  /* 3. Let the table section expand naturally */
+  .table-section {
+    height: auto !important;
+    min-height: 0 !important;
+    flex: none !important;
+    margin-bottom: 2rem; /* Space at bottom for mobile */
+  }
+
+  /* 4. THE NESTED SCROLL LOGIC */
+  .table-scroll {
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+    /* CRITICAL: Limit height so internal scrolling activates.
+       70vh means "70% of the screen height". 
+       This leaves 30% for the Header/Search bar so the user doesn't get stuck. */
+    max-height: 70vh !important;
+    height: auto !important;
+
+    border-bottom: 1px solid #dee2e6;
+    width: 100% !important;
+    max-width: 100vw !important;
+    display: block;
   }
 
   .page-title {
