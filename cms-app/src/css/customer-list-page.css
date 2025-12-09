@@ -259,3 +259,20 @@ html, body, #root {
     max-width: 100% !important;
   }
 }
+
+
+/* "Add Member" Form Styling */
+.add-member-card {
+  /* 1. Distinct Border (Slate Gray) */
+  border: 1px solid #cbd5e1 !important; 
+  
+  /* 2. Remove default radius if you want it sharper, or keep it: */
+  border-radius: 8px;
+  
+  /* 3. Stronger Shadow to lift it off the page */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+              0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+              
+  /* 4. Optional: Very subtle off-white background to separate from page */
+  background-color: #f8f9fa; 
+}

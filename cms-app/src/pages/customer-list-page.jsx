@@ -382,48 +382,67 @@ function MembersPage() {
             </Form.Select>
           </div>
 
-          {/* Add Member Form (Keep existing logic) */}
+          {/* Add Member Form */}
           {showAddForm && (
-            <Row className="mb-3">
+            <Row className="mt-3 mb-3 px-4"> {/* Added px-4 to align with your content padding */}
               <Col>
-                <Card className="shadow-sm border-0">
+                {/* UPDATED CARD CLASS HERE */}
+                <Card className="add-member-card">
                   <Card.Body className="p-4">
                     <div className="d-flex justify-content-between align-items-center mb-3">
-                      <Card.Title className="mb-0">Add New Member</Card.Title>
+                      <Card.Title className="mb-0 fw-bold">Add New Member</Card.Title>
                       <Button variant="close" onClick={() => setShowAddForm(false)} />
                     </div>
                     
                     <Form onSubmit={handleAddSubmit}>
-                      {/* ... Your Existing Form Code Goes Here ... */}
-                      <Row className="mb-3">
-                        <Col md={4}>
-                          <Form.Group controlId="addId">
-                            <Form.Label>ID <span className="text-danger">*</span></Form.Label>
-                            <Form.Control
-                              type="text"
-                              name="id"
-                              value={addForm.id}
-                              onChange={handleAddInputChange}
-                              placeholder="e.g. B101"
-                              required
-                              isInvalid={!!idError}
-                            />
-                            <Form.Control.Feedback type="invalid">{idError}</Form.Control.Feedback>
-                          </Form.Group>
-                        </Col>
-                        {/* ... rest of your form ... */}
-                        <Col md={4}><Form.Group><Form.Label>Name</Form.Label><Form.Control type="text" name="name" value={addForm.name} onChange={handleAddInputChange} required /></Form.Group></Col>
-                        <Col md={4}><Form.Group><Form.Label>Car</Form.Label><Form.Control type="text" name="car" value={addForm.car} onChange={handleAddInputChange} /></Form.Group></Col>
-                      </Row>
+                      {/* ... (Keep your existing form fields exactly as they are) ... */}
                       
+                      {/* Example of your existing fields for context: */}
                       <Row className="mb-3">
-                         <Col md={3}><Form.Check type="checkbox" label="Active" name="isActive" checked={addForm.isActive} onChange={handleAddInputChange} /></Col>
-                         <Col md={3}><Form.Check type="checkbox" label="Valid Payment" name="validPayment" checked={addForm.validPayment} onChange={handleAddInputChange} /></Col>
-                         <Col md={6}><Form.Control as="textarea" rows={1} name="notes" placeholder="Notes" value={addForm.notes} onChange={handleAddInputChange} /></Col>
+                          <Col md={4}>
+                            <Form.Group controlId="addId">
+                              <Form.Label>ID <span className="text-danger">*</span></Form.Label>
+                              <Form.Control type="text" name="id" value={addForm.id} onChange={handleAddInputChange} placeholder="e.g. B101" required isInvalid={!!idError} />
+                              <Form.Control.Feedback type="invalid">{idError}</Form.Control.Feedback>
+                            </Form.Group>
+                          </Col>
+                          <Col md={4}>
+                            <Form.Group controlId="addName">
+                              <Form.Label>Name <span className="text-danger">*</span></Form.Label>
+                              <Form.Control type="text" name="name" value={addForm.name} onChange={handleAddInputChange} required />
+                            </Form.Group>
+                          </Col>
+                          <Col md={4}>
+                            <Form.Group controlId="addCar">
+                              <Form.Label>Vehicle</Form.Label>
+                              <Form.Control type="text" name="car" value={addForm.car} onChange={handleAddInputChange} />
+                            </Form.Group>
+                          </Col>
+                      </Row>
+
+                      <Row className="mb-3">
+                          <Col md={3}>
+                            <Form.Group controlId="addIsActive" className="pt-4">
+                              <Form.Check type="checkbox" label="Active" name="isActive" checked={addForm.isActive} onChange={handleAddInputChange} />
+                            </Form.Group>
+                          </Col>
+                          <Col md={3}>
+                            <Form.Group controlId="addValidPayment" className="pt-4">
+                                <Form.Check type="checkbox" label="Valid Payment" name="validPayment" checked={addForm.validPayment} onChange={handleAddInputChange} />
+                            </Form.Group>
+                          </Col>
+                          <Col md={6}>
+                            <Form.Group controlId="addNotes">
+                              <Form.Label>Notes</Form.Label>
+                              <Form.Control as="textarea" rows={1} name="notes" value={addForm.notes} onChange={handleAddInputChange} />
+                            </Form.Group>
+                          </Col>
                       </Row>
 
                       <div className="text-end">
-                        <Button type="submit" variant="success">Create Member</Button>
+                        <Button type="submit" variant="success" className="fw-bold">
+                          Create Member
+                        </Button>
                       </div>
                     </Form>
                   </Card.Body>
@@ -501,7 +520,7 @@ function MembersPage() {
                           <td className="text-center">
                             {validPayment 
                               ? <span className="badge bg-success">Paid</span> 
-                              : <span className="badge bg-danger">Needed</span>
+                              : <span className="badge bg-warning">Needed</span>
                             }
                           </td>
 
