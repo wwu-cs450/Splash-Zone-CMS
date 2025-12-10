@@ -1,0 +1,792 @@
+[
+  {
+    "memberId": 1,
+    "memberTierCode": "U",
+    "memberCode": "847",
+    "membershipTier": "Ultimate",
+    "name": "Sarah Miller",
+    "carModel": "Honda CR-V",
+    "isActive": true,
+    "dataUpdated": false,
+    "visits": [
+      "2025-09-15",
+      "2025-08-20",
+      "2025-07-29"
+    ],
+    "totalVisits": 3
+  },
+  {
+    "memberId": 2,
+    "memberTierCode": "D",
+    "memberCode": "192",
+    "membershipTier": "Deluxe",
+    "name": "Ethan Chen",
+    "carModel": "Ford Escape",
+    "isActive": true,
+    "dataUpdated": true,
+    "visits": [
+      "2025-09-21",
+      "2025-09-01",
+      "2025-08-11",
+      "2025-07-27"
+    ],
+    "totalVisits": 4
+  },
+  {
+    "memberId": 3,
+    "memberTierCode": "B",
+    "memberCode": "065",
+    "membershipTier": "Basic",
+    "name": "Olivia Rodriguez",
+    "carModel": "Nissan Altima",
+    "isActive": false,
+    "dataUpdated": false,
+    "visits": [
+      "2025-08-05"
+    ],
+    "totalVisits": 1
+  },
+  {
+    "memberId": 4,
+    "memberTierCode": "U",
+    "memberCode": "511",
+    "membershipTier": "Ultimate",
+    "name": "Michael Davis",
+    "carModel": "Tesla Model Y",
+    "isActive": true,
+    "dataUpdated": true,
+    "visits": [
+      "2025-09-22",
+      "2025-08-15"
+    ],
+    "totalVisits": 2
+  },
+  {
+    "memberId": 5,
+    "memberTierCode": "D",
+    "memberCode": "730",
+    "membershipTier": "Deluxe",
+    "name": "Ava Wilson",
+    "carModel": "Jeep Wrangler",
+    "isActive": true,
+    "dataUpdated": true,
+    "visits": [
+      "2025-09-19",
+      "2025-09-08",
+      "2025-08-01",
+      "2025-07-30"
+    ],
+    "totalVisits": 4
+  },
+  {
+    "memberId": 6,
+    "memberTierCode": "B",
+    "memberCode": "409",
+    "membershipTier": "Basic",
+    "name": "Liam Brown",
+    "carModel": null,
+    "isActive": true,
+    "dataUpdated": true,
+    "visits": [
+      "2025-09-03",
+      "2025-08-16",
+      "2025-08-02",
+      "2025-07-25"
+    ],
+    "totalVisits": 4
+  },
+  {
+    "memberId": 7,
+    "memberTierCode": "U",
+    "memberCode": "271",
+    "membershipTier": "Ultimate",
+    "name": "Chloe Garcia",
+    "carModel": "BMW X3",
+    "isActive": true,
+    "dataUpdated": false,
+    "visits": [
+      "2025-09-05",
+      "2025-08-25",
+      "2025-08-18"
+    ],
+    "totalVisits": 3
+  },
+  {
+    "memberId": 8,
+    "memberTierCode": "D",
+    "memberCode": "888",
+    "membershipTier": "Deluxe",
+    "name": "Noah Martinez",
+    "carModel": "Mercedes-Benz C-Class",
+    "isActive": false,
+    "dataUpdated": true,
+    "visits": [
+      "2025-09-10",
+      "2025-08-08"
+    ],
+    "totalVisits": 2
+  },
+  {
+    "memberId": 9,
+    "memberTierCode": "B",
+    "memberCode": "103",
+    "membershipTier": "Basic",
+    "name": "Isabella Lopez",
+    "carModel": "Hyundai Elantra",
+    "isActive": true,
+    "dataUpdated": true,
+    "visits": [
+      "2025-09-22",
+      "2025-08-29",
+      "2025-07-31"
+    ],
+    "totalVisits": 3
+  },
+  {
+    "memberId": 10,
+    "memberTierCode": "U",
+    "memberCode": "644",
+    "membershipTier": "Ultimate",
+    "name": "James Lee",
+    "carModel": "Volvo XC60",
+    "isActive": true,
+    "dataUpdated": false,
+    "visits": [
+      "2025-09-17"
+    ],
+    "totalVisits": 1
+  },
+  {
+    "memberId": 11,
+    "memberTierCode": "B",
+    "memberCode": "352",
+    "membershipTier": "Basic",
+    "name": "Sophia Hernandez",
+    "carModel": "Kia Sportage",
+    "isActive": true,
+    "dataUpdated": true,
+    "visits": [
+      "2025-09-01",
+      "2025-08-12",
+      "2025-07-26"
+    ],
+    "totalVisits": 3
+  },
+  {
+    "memberId": 12,
+    "memberTierCode": "D",
+    "memberCode": "901",
+    "membershipTier": "Deluxe",
+    "name": "William King",
+    "carModel": "Acura MDX",
+    "isActive": true,
+    "dataUpdated": false,
+    "visits": [
+      "2025-09-14",
+      "2025-09-11",
+      "2025-08-03",
+      "2025-07-28"
+    ],
+    "totalVisits": 4
+  },
+  {
+    "memberId": 13,
+    "memberTierCode": "U",
+    "memberCode": "777",
+    "membershipTier": "Ultimate",
+    "name": "Mia Clark",
+    "carModel": "Audi Q5",
+    "isActive": true,
+    "dataUpdated": true,
+    "visits": [
+      "2025-09-16",
+      "2025-08-28"
+    ],
+    "totalVisits": 2
+  },
+  {
+    "memberId": 14,
+    "memberTierCode": "B",
+    "memberCode": "204",
+    "membershipTier": "Basic",
+    "name": "Jacob Scott",
+    "carModel": null,
+    "isActive": false,
+    "dataUpdated": true,
+    "visits": [
+      "2025-08-01",
+      "2025-07-25"
+    ],
+    "totalVisits": 2
+  },
+  {
+    "memberId": 15,
+    "memberTierCode": "D",
+    "memberCode": "418",
+    "membershipTier": "Deluxe",
+    "name": "Emily Baker",
+    "carModel": "Lexus RX 350",
+    "isActive": true,
+    "dataUpdated": false,
+    "visits": [
+      "2025-09-07",
+      "2025-08-19",
+      "2025-08-04"
+    ],
+    "totalVisits": 3
+  },
+  {
+    "memberId": 16,
+    "memberTierCode": "U",
+    "memberCode": "950",
+    "membershipTier": "Ultimate",
+    "name": "Alexander Adams",
+    "carModel": "Porsche Cayenne",
+    "isActive": true,
+    "dataUpdated": true,
+    "visits": [
+      "2025-09-09",
+      "2025-08-10",
+      "2025-07-24"
+    ],
+    "totalVisits": 3
+  },
+  {
+    "memberId": 17,
+    "memberTierCode": "D",
+    "memberCode": "555",
+    "membershipTier": "Deluxe",
+    "name": "Charlotte Green",
+    "carModel": "Chevy Malibu",
+    "isActive": true,
+    "dataUpdated": true,
+    "visits": [
+      "2025-09-20",
+      "2025-09-05"
+    ],
+    "totalVisits": 2
+  },
+  {
+    "memberId": 18,
+    "memberTierCode": "B",
+    "memberCode": "129",
+    "membershipTier": "Basic",
+    "name": "Daniel Hill",
+    "carModel": "Dodge Ram 1500",
+    "isActive": true,
+    "dataUpdated": false,
+    "visits": [
+      "2025-09-03",
+      "2025-08-16",
+      "2025-08-09",
+      "2025-07-26"
+    ],
+    "totalVisits": 4
+  },
+  {
+    "memberId": 19,
+    "memberTierCode": "U",
+    "memberCode": "020",
+    "membershipTier": "Ultimate",
+    "name": "Amelia Nelson",
+    "carModel": "Subaru Forester",
+    "isActive": true,
+    "dataUpdated": true,
+    "visits": [
+      "2025-09-18",
+      "2025-09-06",
+      "2025-08-27"
+    ],
+    "totalVisits": 3
+  },
+  {
+    "memberId": 20,
+    "memberTierCode": "B",
+    "memberCode": "808",
+    "membershipTier": "Basic",
+    "name": "Henry Wright",
+    "carModel": "Mazda CX-5",
+    "isActive": true,
+    "dataUpdated": false,
+    "visits": [
+      "2025-09-12",
+      "2025-08-04"
+    ],
+    "totalVisits": 2
+  },
+  {
+    "memberId": 21,
+    "memberTierCode": "D",
+    "memberCode": "613",
+    "membershipTier": "Deluxe",
+    "name": "Evelyn Hall",
+    "carModel": "GMC Sierra",
+    "isActive": true,
+    "dataUpdated": true,
+    "visits": [
+      "2025-09-21",
+      "2025-09-04",
+      "2025-08-22",
+      "2025-08-13",
+      "2025-07-28"
+    ],
+    "totalVisits": 5
+  },
+  {
+    "memberId": 22,
+    "memberTierCode": "U",
+    "memberCode": "499",
+    "membershipTier": "Ultimate",
+    "name": "Matthew Lewis",
+    "carModel": "Jeep Cherokee",
+    "isActive": true,
+    "dataUpdated": false,
+    "visits": [
+      "2025-09-02",
+      "2025-08-29",
+      "2025-08-07"
+    ],
+    "totalVisits": 3
+  },
+  {
+    "memberId": 23,
+    "memberTierCode": "B",
+    "memberCode": "001",
+    "membershipTier": "Basic",
+    "name": "Harper Turner",
+    "carModel": null,
+    "isActive": true,
+    "dataUpdated": true,
+    "visits": [
+      "2025-09-14",
+      "2025-08-09"
+    ],
+    "totalVisits": 2
+  },
+  {
+    "memberId": 24,
+    "memberTierCode": "D",
+    "memberCode": "281",
+    "membershipTier": "Deluxe",
+    "name": "Leo Walker",
+    "carModel": "Toyota Prius",
+    "isActive": false,
+    "dataUpdated": true,
+    "visits": [
+      "2025-08-18"
+    ],
+    "totalVisits": 1
+  },
+  {
+    "memberId": 25,
+    "memberTierCode": "U",
+    "memberCode": "742",
+    "membershipTier": "Ultimate",
+    "name": "Grace Perez",
+    "carModel": "Mercedes-Benz E-Class",
+    "isActive": true,
+    "dataUpdated": true,
+    "visits": [
+      "2025-09-22",
+      "2025-08-11"
+    ],
+    "totalVisits": 2
+  },
+  {
+    "memberId": 26,
+    "memberTierCode": "B",
+    "memberCode": "563",
+    "membershipTier": "Basic",
+    "name": "Jack Harris",
+    "carModel": "Honda Pilot",
+    "isActive": true,
+    "dataUpdated": false,
+    "visits": [
+      "2025-09-10",
+      "2025-08-25",
+      "2025-08-02",
+      "2025-07-26"
+    ],
+    "totalVisits": 4
+  },
+  {
+    "memberId": 27,
+    "memberTierCode": "D",
+    "memberCode": "119",
+    "membershipTier": "Deluxe",
+    "name": "Aria Young",
+    "carModel": "Chevy Camaro",
+    "isActive": true,
+    "dataUpdated": true,
+    "visits": [
+      "2025-09-18",
+      "2025-09-01",
+      "2025-08-15"
+    ],
+    "totalVisits": 3
+  },
+  {
+    "memberId": 28,
+    "memberTierCode": "U",
+    "memberCode": "304",
+    "membershipTier": "Ultimate",
+    "name": "Logan Turner",
+    "carModel": "Audi A4",
+    "isActive": false,
+    "dataUpdated": true,
+    "visits": [
+      "2025-08-28"
+    ],
+    "totalVisits": 1
+  },
+  {
+    "memberId": 29,
+    "memberTierCode": "B",
+    "memberCode": "692",
+    "membershipTier": "Basic",
+    "name": "Zoe Evans",
+    "carModel": "Hyundai Sonata",
+    "isActive": true,
+    "dataUpdated": false,
+    "visits": [
+      "2025-09-07",
+      "2025-08-19",
+      "2025-08-04",
+      "2025-07-31"
+    ],
+    "totalVisits": 4
+  },
+  {
+    "memberId": 30,
+    "memberTierCode": "D",
+    "memberCode": "835",
+    "membershipTier": "Deluxe",
+    "name": "Ryan Rodriguez",
+    "carModel": "Kia Stinger",
+    "isActive": true,
+    "dataUpdated": true,
+    "visits": [
+      "2025-09-09",
+      "2025-08-30",
+      "2025-08-13",
+      "2025-07-25"
+    ],
+    "totalVisits": 4
+  },
+  {
+    "memberId": 31,
+    "memberTierCode": "U",
+    "memberCode": "170",
+    "membershipTier": "Ultimate",
+    "name": "Lily Morris",
+    "carModel": "Lexus ES 300",
+    "isActive": false,
+    "dataUpdated": false,
+    "visits": [
+      "2025-08-10"
+    ],
+    "totalVisits": 1
+  },
+  {
+    "memberId": 32,
+    "memberTierCode": "B",
+    "memberCode": "918",
+    "membershipTier": "Basic",
+    "name": "Elijah Baker",
+    "carModel": "Honda Civic",
+    "isActive": true,
+    "dataUpdated": true,
+    "visits": [
+      "2025-09-04",
+      "2025-08-21"
+    ],
+    "totalVisits": 2
+  },
+  {
+    "memberId": 33,
+    "memberTierCode": "D",
+    "memberCode": "333",
+    "membershipTier": "Deluxe",
+    "name": "Nora Allen",
+    "carModel": "Ford F-150",
+    "isActive": true,
+    "dataUpdated": true,
+    "visits": [
+      "2025-09-15",
+      "2025-09-03",
+      "2025-08-16"
+    ],
+    "totalVisits": 3
+  },
+  {
+    "memberId": 34,
+    "memberTierCode": "U",
+    "memberCode": "040",
+    "membershipTier": "Ultimate",
+    "name": "Carter White",
+    "carModel": "Toyota RAV4",
+    "isActive": true,
+    "dataUpdated": true,
+    "visits": [
+      "2025-09-17",
+      "2025-08-06",
+      "2025-07-29"
+    ],
+    "totalVisits": 3
+  },
+  {
+    "memberId": 35,
+    "memberTierCode": "B",
+    "memberCode": "606",
+    "membershipTier": "Basic",
+    "name": "Scarlett Perez",
+    "carModel": "Chevy Tahoe",
+    "isActive": true,
+    "dataUpdated": false,
+    "visits": [
+      "2025-09-01",
+      "2025-08-23",
+      "2025-08-11",
+      "2025-07-27"
+    ],
+    "totalVisits": 4
+  },
+  {
+    "memberId": 36,
+    "memberTierCode": "D",
+    "memberCode": "201",
+    "membershipTier": "Deluxe",
+    "name": "Isaac Hall",
+    "carModel": "BMW 3 Series",
+    "isActive": true,
+    "dataUpdated": true,
+    "visits": [
+      "2025-09-19",
+      "2025-08-20"
+    ],
+    "totalVisits": 2
+  },
+  {
+    "memberId": 37,
+    "memberTierCode": "U",
+    "memberCode": "999",
+    "membershipTier": "Ultimate",
+    "name": "Penelope King",
+    "carModel": "Audi Q7",
+    "isActive": false,
+    "dataUpdated": false,
+    "visits": [
+      "2025-08-03"
+    ],
+    "totalVisits": 1
+  },
+  {
+    "memberId": 38,
+    "memberTierCode": "B",
+    "memberCode": "456",
+    "membershipTier": "Basic",
+    "name": "Julian Garcia",
+    "carModel": "Mercedes-Benz GLE",
+    "isActive": true,
+    "dataUpdated": false,
+    "visits": [
+      "2025-09-22",
+      "2025-09-08",
+      "2025-08-14"
+    ],
+    "totalVisits": 3
+  },
+  {
+    "memberId": 39,
+    "memberTierCode": "D",
+    "memberCode": "700",
+    "membershipTier": "Deluxe",
+    "name": "Victoria Scott",
+    "carModel": "Volvo S60",
+    "isActive": true,
+    "dataUpdated": true,
+    "visits": [
+      "2025-09-16",
+      "2025-08-26",
+      "2025-08-01",
+      "2025-07-24"
+    ],
+    "totalVisits": 4
+  },
+  {
+    "memberId": 40,
+    "memberTierCode": "U",
+    "memberCode": "135",
+    "membershipTier": "Ultimate",
+    "name": "Andrew Adams",
+    "carModel": "Subaru Outback",
+    "isActive": true,
+    "dataUpdated": true,
+    "visits": [
+      "2025-09-05",
+      "2025-08-18",
+      "2025-08-09"
+    ],
+    "totalVisits": 3
+  },
+  {
+    "memberId": 41,
+    "memberTierCode": "B",
+    "memberCode": "880",
+    "membershipTier": "Basic",
+    "name": "Eleanor Lopez",
+    "carModel": "Lexus IS 300",
+    "isActive": true,
+    "dataUpdated": false,
+    "visits": [
+      "2025-09-10",
+      "2025-08-27"
+    ],
+    "totalVisits": 2
+  },
+  {
+    "memberId": 42,
+    "memberTierCode": "D",
+    "memberCode": "666",
+    "membershipTier": "Deluxe",
+    "name": "Gabriel Green",
+    "carModel": null,
+    "isActive": true,
+    "dataUpdated": true,
+    "visits": [
+      "2025-09-14",
+      "2025-08-22"
+    ],
+    "totalVisits": 2
+  },
+  {
+    "memberId": 43,
+    "memberTierCode": "U",
+    "memberCode": "091",
+    "membershipTier": "Ultimate",
+    "name": "Hannah Baker",
+    "carModel": "Porsche 911",
+    "isActive": true,
+    "dataUpdated": true,
+    "visits": [
+      "2025-09-03",
+      "2025-08-17",
+      "2025-08-05",
+      "2025-07-26"
+    ],
+    "totalVisits": 4
+  },
+  {
+    "memberId": 44,
+    "memberTierCode": "B",
+    "memberCode": "321",
+    "membershipTier": "Basic",
+    "name": "Leo Nelson",
+    "carModel": "Kia K5",
+    "isActive": true,
+    "dataUpdated": true,
+    "visits": [
+      "2025-09-19",
+      "2025-08-08"
+    ],
+    "totalVisits": 2
+  },
+  {
+    "memberId": 45,
+    "memberTierCode": "D",
+    "memberCode": "753",
+    "membershipTier": "Deluxe",
+    "name": "Stella Walker",
+    "carModel": "Jeep Grand Cherokee",
+    "isActive": true,
+    "dataUpdated": true,
+    "visits": [
+      "2025-09-11",
+      "2025-09-05",
+      "2025-08-29",
+      "2025-08-15"
+    ],
+    "totalVisits": 4
+  },
+  {
+    "memberId": 46,
+    "memberTierCode": "U",
+    "memberCode": "505",
+    "membershipTier": "Ultimate",
+    "name": "Owen Hall",
+    "carModel": "Honda Ridgeline",
+    "isActive": true,
+    "dataUpdated": false,
+    "visits": [
+      "2025-09-07",
+      "2025-08-24",
+      "2025-08-02",
+      "2025-07-31"
+    ],
+    "totalVisits": 4
+  },
+  {
+    "memberId": 47,
+    "memberTierCode": "B",
+    "memberCode": "181",
+    "membershipTier": "Basic",
+    "name": "Hazel Adams",
+    "carModel": "Toyota Tundra",
+    "isActive": true,
+    "dataUpdated": true,
+    "visits": [
+      "2025-09-13",
+      "2025-08-10"
+    ],
+    "totalVisits": 2
+  },
+  {
+    "memberId": 48,
+    "memberTierCode": "D",
+    "memberCode": "000",
+    "membershipTier": "Deluxe",
+    "name": "Finn Martinez",
+    "carModel": "BMW X5",
+    "isActive": true,
+    "dataUpdated": true,
+    "visits": [
+      "2025-09-21",
+      "2025-08-19",
+      "2025-08-04"
+    ],
+    "totalVisits": 3
+  },
+  {
+    "memberId": 49,
+    "memberTierCode": "U",
+    "memberCode": "822",
+    "membershipTier": "Ultimate",
+    "name": "Ruby Carter",
+    "carModel": "Mercedes-Benz GLS",
+    "isActive": true,
+    "dataUpdated": true,
+    "visits": [
+      "2025-09-09",
+      "2025-08-27",
+      "2025-08-08",
+      "2025-07-29"
+    ],
+    "totalVisits": 4
+  },
+  {
+    "memberId": 50,
+    "memberTierCode": "B",
+    "memberCode": "234",
+    "membershipTier": "Basic",
+    "name": "Asher Hall",
+    "carModel": "Nissan Rogue",
+    "isActive": true,
+    "dataUpdated": false,
+    "visits": [
+      "2025-09-15",
+      "2025-08-20",
+      "2025-08-03"
+    ],
+    "totalVisits": 3
+  }
+]
