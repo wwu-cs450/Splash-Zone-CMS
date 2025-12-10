@@ -126,7 +126,7 @@ export async function uploadCustomerRecordsFromFile(file, createMember) {
           // Determine validPayment based on yellow fill color
           const validPayment = !rowHasColor(row, 'yellow');
 
-          // Default notes to empty string
+          // Defaults notes column to empty string
           const notes = '';
 
           // Validate that we have at least an ID

@@ -5,47 +5,6 @@
   --gap: 1.25rem;
 }
 
-/* Put this in customer-list-page.css (or a global css file that loads after Bootstrap) */
-/* Inactive row (gray) */
-.member-row--inactive td {
-  background-color: #706B6B !important;
-  color: #222; /* keep readable text */
-}
-
-/* Invalid payment row (yellow) */
-.member-row--payment-issue td {
-  background-color: #98FF12 !important;
-  color: #222;
-}
-
-/* Keep hover subtle (optional) */
-.table tbody tr.member-row--inactive:hover td,
-.table tbody tr.member-row--payment-issue:hover td {
-  filter: brightness(0.98);
-}
-
-/* Always-white action buttons on colored rows */
-.member-row--inactive td .btn,
-.member-row--payment-issue td .btn {
-  background-color: #ffffff !important;   /* pure white */
-  color: inherit !important;               /* keep bootstrap text color (blue/red) */
-  z-index: 1;
-  position: relative;
-}
-
-/* Optional: keep outline buttons crisp on colored backgrounds */
-.member-row--inactive td .btn-outline-primary,
-.member-row--payment-issue td .btn-outline-primary,
-.member-row--inactive td .btn-outline-danger,
-.member-row--payment-issue td .btn-outline-danger {
-  background-color: #ffffff !important;
-}
-
-.member-row--inactive td .btn,
-.member-row--payment-issue td .btn {
-  box-shadow: 0 0 2px rgba(0,0,0,0.2);
-}
-
 .customerList {
   padding: var(--gap);
   font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, Arial;
@@ -78,12 +37,273 @@
   margin-bottom: 1rem;
 }
 
+/* 1. LOCK THE TABLE LAYOUT */
 .table {
   border: 1px solid #e7eaf3;
   border-radius: 6px;
-  overflow: hidden;
+  border-collapse: separate; 
+  border-spacing: 0;
+  
+  table-layout: fixed; 
+  width: 100%; 
+  
+  /* Forces the table to stay wide enough to be readable. On mobile, this triggers the horizontal scrollbar. */
+  min-width: 800px; 
+}
+
+/* 2. ADD THE TRUNCATE CLASS (For ID, Name, Car, Notes) */
+.cell-truncate {
+  white-space: nowrap;      /* Force text to one line */
+  overflow: hidden;         /* Hide overflow */
+  text-overflow: ellipsis;  /* Add "..." at the end */
+  vertical-align: middle;
 }
 
 :global(.text-muted-important) {
   color: var(--muted) !important;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  overflow: hidden; /* 1. PREVENT BODY SCROLLING */
+}
+
+.page-wrap {
+  display: flex;
+  flex-direction: column;
+  /* 2. SUBTRACT MENU HEIGHT (Adjust 56px to match your actual HamburgerMenu height) */
+  height: calc(100vh - 56px); 
+  overflow: hidden;
+}
+
+.header-section {
+  flex: 0 0 auto; /* Don't shrink/grow */
+}
+
+/* 3. FORCE TABLE SECTION TO FILL REMAINING SPACE */
+.table-section {
+  flex: 1 1 auto; 
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* CRITICAL for nested scrolling */
+}
+
+/* 4. DEFINE THE SCROLL AREA */
+.table-scroll {
+  flex: 1 1 auto;
+  overflow: auto; /* Changed from overflow-y: auto to allow horizontal scroll too */
+  border-bottom: 1px solid #dee2e6;
+  position: relative;
+  scrollbar-gutter: stable;
+}
+
+/* Force sticky headers via CSS */
+.table-scroll thead th {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 2; /* Keeps header above the content */
+  
+  /* REQUIRED: Background color. 
+     Without this, the header is transparent and content scrolls behind it. 
+     #f8f9fa is the default Bootstrap light-gray. Use #fff for white. */
+  background-color: #f8f9fa !important; 
+  
+  /* Optional: Adds a subtle shadow to separate header from rows */
+  box-shadow: 0 2px 2px -1px rgba(0,0,0,0.1); 
+  
+  /* Fix for Bootstrap borders on sticky elements */
+  border-top: none !important;
+}
+
+/* --- 1. PAGE HEADER (Title + Actions) --- */
+
+/* The container for Title (left) and Buttons (right) */
+.page-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem; /* Space between Header and Search bar */
+  
+  /* Critical: Adds space so the Hamburger doesn't cover the text */
+  padding-left: 75px;
+  padding-top: 12px;
+  padding-right: 1rem; 
+}
+
+/* The Title Typography - The "Pro" Look */
+.page-title {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-weight: 700;       /* Bold */
+  font-size: 1.75rem;     /* ~28px */
+  color: #111827;         /* Dark Gray (Not pure black) */
+  letter-spacing: -0.025em; /* Tightens letters slightly */
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* Container for Export/Add Buttons */
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* --- 2. TOOLBAR (Search + Filters) --- */
+
+.toolbar-wrapper {
+  display: flex;
+  flex-wrap: wrap; 
+  gap: 12px; 
+  align-items: center;
+  margin-bottom: 0;
+  padding-left: 0; /* Align with table */
+  padding-right: 0;
+}
+
+/* Search bar grows to fill space */
+.search-input-group {
+  flex-grow: 1;           
+  min-width: 240px;
+  max-width: 450px;       
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+/* Inputs: Cleaner and Taller */
+.form-control, .form-select {
+  border-color: #e5e7eb;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.95rem;
+  border-radius: 6px;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  outline: none;
+}
+
+/* --- CUSTOM BOOTSTRAP BADGE COLORS --- */
+
+/* Overwrite 'bg-secondary' (Used for 'Inactive') */
+.badge.bg-secondary {
+  /* REPLACE WITH YOUR GRAY HEX CODE */
+  background-color: #757171 !important; 
+  color: #ffffff !important;
+}
+
+/* 3. Overwrite 'bg-warning' (Used for 'Needed') */
+.badge.bg-warning {
+  /* REPLACE WITH YOUR YELLOW/ORANGE HEX CODE */
+  background-color: #FFFF00 !important; 
+  color: #000000 !important; /* White text often looks better on dark yellow/orange */
+  border: 1px solid #e6e600 !important;
+}
+
+/* --- MOBILE RESPONSIVENESS --- */
+@media (max-width: 768px) {
+  /* 1. Unlock the body height so the browser scrollbar appears */
+  html, body, #root {
+    height: auto !important;
+    overflow-y: auto !important; /* Force scrollbar */
+  }
+
+  /* 2. Let the page wrapper grow as tall as the content needs */
+  .page-wrap {
+    height: auto !important; 
+    overflow: visible !important;
+    display: block !important; /* Remove flex constraints */
+  }
+
+  .page-header-row {
+    flex-direction: column; /* Stack Title and Buttons */
+    align-items: stretch;
+    gap: 1rem;
+    padding-left: 0;
+    padding-top: 0;
+  }
+
+  /* 3. Let the table section expand naturally */
+  .table-section {
+    height: auto !important;
+    min-height: 0 !important;
+    flex: none !important;
+    margin-bottom: 2rem; /* Space at bottom for mobile */
+  }
+
+  /* 4. THE NESTED SCROLL LOGIC */
+  .table-scroll {
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+    /* CRITICAL: Limit height so internal scrolling activates.
+       70vh means "70% of the screen height". 
+       This leaves 30% for the Header/Search bar so the user doesn't get stuck. */
+    max-height: 70vh !important;
+    height: auto !important;
+
+    border-bottom: 1px solid #dee2e6;
+    width: 100% !important;
+    max-width: 100vw !important;
+    display: block;
+  }
+
+  .page-title {
+    /* Title keeps its distance from the fixed hamburger */
+    margin-left: 60px; 
+    margin-top: 6px;
+    align-self: flex-start; /* Ensure it doesn't stretch weirdly */
+  }
+  
+  .toolbar-wrapper {
+    padding-left: 0; /* Reset padding on mobile for filters */
+  }
+
+  .header-actions {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .header-actions .btn {
+    flex: 1; /* Buttons stretch full width */
+  }
+  
+  /* --- TOOLBAR FIXES FOR INLINE FILTERS --- */
+  
+  .toolbar-wrapper {
+    padding-left: 0;
+    gap: 8px; /* Tighter gap for mobile */
+  }
+  
+  /* SEARCH BAR: Force to full width (Row 1) */
+  .search-input-group {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-right: 0 !important;
+  }
+  
+  /* FILTERS: Share the width equally (Row 2) */
+  .filter-select {
+    width: auto !important; /* Stop forcing 100% */
+    flex: 1;                /* Grow to fill space equally */
+    min-width: 0;           /* Allow shrinking if text is long */
+    padding-left: 0.5rem;   /* Tighten padding slightly for small screens */
+    padding-right: 1.5rem !important; /* Reduce right padding so text fits */
+    background-position: right 0.2rem center; /* Move arrow closer to edge */
+  }
+}
+
+
+/* "Add Member" Form Styling */
+.add-member-card {
+  /* 1. Distinct Border (Slate Gray) */
+  border: 1px solid #cbd5e1 !important; 
+  
+  /* 2. Remove default radius if you want it sharper, or keep it: */
+  border-radius: 8px;
+  
+  /* 3. Stronger Shadow to lift it off the page */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+              0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+              
+  /* 4. Optional: Very subtle off-white background to separate from page */
+  background-color: #f8f9fa; 
 }
