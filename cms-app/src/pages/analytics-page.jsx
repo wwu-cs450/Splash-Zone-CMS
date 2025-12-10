@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import Button from 'react-bootstrap/Button';
 import Stack from 'react-bootstrap/Stack';
 import Card from 'react-bootstrap/Card';
@@ -6,6 +6,8 @@ import '../css/analytics-page.css';
 import HamburgerMenu from '../components/hamburger-menu';
 import data from '../api/mock-user-data.json';
 
+import { Chart as ChartJS, ArcElement, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
+ChartJS.register(ArcElement, BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 import {Bar, Doughnut} from 'react-chartjs-2';
 
 function AnalyticsPage() {
@@ -61,7 +63,6 @@ function AnalyticsPage() {
   }
 
   function TierChart({ data }) {
-    useEffect(() => () => {}, []);
     const dict = memberCountByTier(data);
     const chartData = {
       labels: Object.keys(dict),
@@ -69,14 +70,18 @@ function AnalyticsPage() {
         {
           label: 'Membership Tiers',
           data: Object.values(dict),
+          backgroundColor: [
+            'rgba(75, 192, 192, 0.6)',
+            'rgba(54, 162, 235, 0.6)',
+            'rgba(255, 206, 86, 0.6)'
+          ],
         }
       ]
     }
-    return <Doughnut data={chartData} />;
+    return <div style={{ maxWidth: '400px', margin: '20px auto', overflow: 'auto' }}><Doughnut data={chartData} /></div>;
   }
 
   function StatusChart({ data }) {
-    useEffect(() => () => {}, []);
     const dict = memberCountByStatus(data);
     const chartData = {
       labels: Object.keys(dict),
@@ -84,19 +89,30 @@ function AnalyticsPage() {
         {
           label: 'Member status distribution',
           data: Object.values(dict),
+          backgroundColor: [
+            'rgba(75, 192, 192, 0.6)',
+            'rgba(54, 162, 235, 0.6)',
+            'rgba(255, 206, 86, 0.6)'
+          ],
         }
       ]
     }
-    return <Bar data={chartData} />;
+    return <div style={{ maxWidth: '600px', margin: '20px auto', overflow: 'auto'}}><Bar data={chartData} /></div>;
   }
 
   const GraphView = () => (
-    <Card body className="content-card">
-      <h3 className="chart-title">Membership Tiers Distribution</h3>
-      <TierChart key="tier-chart" data={data}/>
-      <br />
-      <h3 className="chart-title">Placeholder for Additional Graphs</h3>
-      <StatusChart key="tier-chart" data={data}/>
+    <Card body className="graph-container" >
+        <h3 style={{ fontSize: '1.5rem', marginBottom: '20px', color: '#007bff' }}>Analytics Overview</h3>
+        
+        {/* 1. Tier Chart - FIX: Unique key 'tier-chart' */}
+        <h3 className="chart-title" style={{ fontSize: '1.2rem', marginTop: '15px' }}>Membership Tiers Distribution (Doughnut)</h3>
+        <TierChart key="tier-chart" data={data}/>
+        
+        <div style={{ height: '2px', backgroundColor: '#eee', margin: '30px 0' }} />
+
+        {/* 2. Status Chart - FIX: Unique key 'status-chart' */}
+        <h3 className="chart-title" style={{ fontSize: '1.2rem' }}>Member Status Distribution (Bar)</h3>
+        <StatusChart key="status-chart" data={data}/>
     </Card>
   );
   const DataTableView = () => <Card body className="content-card">Place Holder for data tables with raw data</Card>;
