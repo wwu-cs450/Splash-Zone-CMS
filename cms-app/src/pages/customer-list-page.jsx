@@ -2,7 +2,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/customer-list-page.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-// MembersPage.jsx
 import React, { useEffect, useState } from 'react';
 import {
   Container,
@@ -18,26 +17,19 @@ import {
   Card,
 } from 'react-bootstrap';
 
-// 🔁 Adjust this import path to wherever you defined these functions
-import {
-  getAllMembers,
-  createMember,
-  updateMember,
-  deleteMember,
-} from '../api/firebase-crud';
+import { useMembers } from '../context/MembersContext';
 
 import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
-
 import HamburgerMenu from '../components/hamburger-menu';
 
 function MembersPage() {
-  const [members, setMembers] = useState([]);
+  const { members, isLoading, createMember, updateMember, deleteMember } = useMembers();
+
   const [filteredMembers, setFilteredMembers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [idError, setIdError] = useState('');
 
   // Add Member form state
   const [showAddForm, setShowAddForm] = useState(false);
@@ -64,22 +56,6 @@ function MembersPage() {
   // Delete confirmation modal state
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [memberToDelete, setMemberToDelete] = useState(null);
-
-  // Load members from Firestore
-  const loadMembers = async () => {
-    setIsLoading(true);
-    setError('');
-    try {
-      const data = await getAllMembers();
-      setMembers(data);
-      setFilteredMembers(data);
-    } catch (err) {
-      console.error(err);
-      setError('Failed to load members. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const [filterSubscription, setFilterSubscription] = useState('all');
   const [filterActive, setFilterActive] = useState('all');
@@ -128,11 +104,8 @@ function MembersPage() {
     saveAs(blob, 'CustomerList.xlsx');
   };
 
-  useEffect(() => {
-    loadMembers();
-  }, []);
 
-    // Filter members whenever searchTerm or members changes
+  // Filter members whenever searchTerm or members changes
   useEffect(() => {
     const term = (searchTerm || '').trim().toLowerCase();
 
@@ -142,11 +115,7 @@ function MembersPage() {
       const id = (m.id || '').toString().toLowerCase();
 
       // Determine subscription level
-      // Priority: explicit subscription field, otherwise take first letter of ID
-      const subscription =
-        (m.subscription || (m.id ? m.id[0] : '')).toUpperCase();
-      if (filterSubscription !== 'all' && subscription !== filterSubscription) return false;
-
+      const subscription = (m.subscription || (m.id ? m.id[0] : '')).toUpperCase();
       const subscriptionId = (m.subscriptionId || m.subId || '').toString().toLowerCase();
 
       let matchesSearch =
@@ -178,7 +147,7 @@ function MembersPage() {
   }, [searchTerm, members, filterSubscription, filterActive, filterPayment]);
 
 
-  // Handle Add Member form changes
+  // --- ADD MEMBER HANDLERS ---
   const handleAddInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setAddForm((prev) => ({
@@ -190,9 +159,17 @@ function MembersPage() {
   const handleAddSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setIdError('');
 
-    if (!addForm.id.trim() || !addForm.name.trim()) {
-      setError('ID and Name are required to create a member.');
+    const idPattern = /^[BDU]\d{3}$/; // B/D/U followed by 3 digits
+
+    if (!idPattern.test(addForm.id.trim())) {
+      setIdError("User ID must be in format B###, D###, or U###.");
+      return;
+    }
+
+    if (!addForm.name.trim()) {
+      setError("Name is required to create a member.");
       return;
     }
 
@@ -205,25 +182,15 @@ function MembersPage() {
         addForm.validPayment,
         addForm.notes.trim()
       );
-      // Refresh list
-      await loadMembers();
-      // Reset form
-      setAddForm({
-        id: '',
-        name: '',
-        car: '',
-        isActive: true,
-        validPayment: true,
-        notes: '',
-      });
+      setAddForm({ id: '', name: '', car: '', isActive: true, validPayment: true, notes: '' });
       setShowAddForm(false);
     } catch (err) {
       console.error(err);
-      setError('Failed to create member. Please check the console for details.');
+      setError("Failed to create member. Please check the console for details.");
     }
   };
 
-  // Open edit modal for a member
+  // --- EDIT MEMBER HANDLERS ---
   const handleOpenEditModal = (member) => {
     setEditForm({
       id: member.id,
@@ -263,7 +230,6 @@ function MembersPage() {
       };
 
       await updateMember(editForm.id, updates);
-      await loadMembers();
       setShowEditModal(false);
     } catch (err) {
       console.error(err);
@@ -271,7 +237,7 @@ function MembersPage() {
     }
   };
 
-  // Delete flow
+  // --- DELETE MEMBER HANDLERS ---
   const handleOpenDeleteModal = (member) => {
     setMemberToDelete(member);
     setShowDeleteModal(true);
@@ -282,7 +248,6 @@ function MembersPage() {
     setError('');
     try {
       await deleteMember(memberToDelete.id);
-      await loadMembers();
       setShowDeleteModal(false);
       setMemberToDelete(null);
     } catch (err) {
@@ -299,371 +264,369 @@ function MembersPage() {
   return (
     <>
       <HamburgerMenu />
-      <Container className="my-4">
-        <Row className="mb-3">
-          <Col>
-            <h2>Customer List</h2>
-          </Col>
-        </Row>
+      <Container fluid className="page-wrap">
+        {/* Header + controls */}
+        <div className="header-section py-3">
+          
+          {/* --- ROW 1: HEADER (Title & Global Actions) --- */}
+          <div className="page-header-row">
+            {/* Title */}
+            <h1 className="page-title">Customer List</h1>
 
-      {error && (
-        <Row className="mb-3">
-          <Col>
-            <Alert variant="danger">{error}</Alert>
-          </Col>
-      </Row>
-      )}
-
-      {/* Search + Add button row */}
-      <Row className="align-items-center mb-3">
-        <Col md={8}>
-          <InputGroup>
-            <InputGroup.Text><FontAwesomeIcon icon={faSearch} /></InputGroup.Text>
-            <Form.Control
-              type="text"
-              placeholder="Search by Name or 'Subscription Letter + ID'"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </InputGroup>
-          <Form.Select
-            className="w-25 me-2"
-            value={filterSubscription}
-            onChange={(e) => setFilterSubscription(e.target.value)}
-          >
-            <option value="all">All Subscription Levels</option>
-            <option value="B">B (Basic)</option>
-            <option value="D">D (Deluxe)</option>
-            <option value="U">U (Ultimate)</option>
-          </Form.Select>
-
-          <Form.Select
-            className="w-25 me-2"
-            value={filterActive}
-            onChange={(e) => setFilterActive(e.target.value)}
-          >
-            <option value="all">All Members</option>
-            <option value="active">Active Members</option>
-            <option value="inactive">Inactive Members</option>
-          </Form.Select>
-
-          <Form.Select
-            className="w-25"
-            value={filterPayment}
-            onChange={(e) => setFilterPayment(e.target.value)}
-          >
-            <option value="all">All Payment Status</option>
-            <option value="paid">Active Payment</option>
-            <option value="needed">Payment Needed</option>
-          </Form.Select>
-
-        </Col>
-        <Col md={4} className="text-md-end mt-2 mt-md-0">
-          <Button
-            variant={showAddForm ? 'secondary' : 'primary'}
-            onClick={() => setShowAddForm((prev) => !prev)}
-          >
-            {showAddForm ? 'Close Add Member' : '+ Add Member'}
-          </Button>
-          <Button variant="outline-primary" size="sm" onClick={() => handleExportExcel(filteredMembers)} // Make sure this is an array
-            >
-              Export
-            </Button>
-        </Col>
-      </Row>
-
-      {/* Add Member form */}
-      {showAddForm && (
-        <Row className="mb-4">
-          <Col>
-            <Card>
-              <Card.Body>
-                <Card.Title>Add New Member</Card.Title>
-                <Form onSubmit={handleAddSubmit}>
-                  <Row className="mb-3">
-                    <Col md={4}>
-                      <Form.Group controlId="addId">
-                        <Form.Label>User ID</Form.Label>
-                        <Form.Control
-                          type="text"
-                          name="id"
-                          value={addForm.id}
-                          onChange={handleAddInputChange}
-                          placeholder="e.g. ABCD"
-                          required
-                        />
-                      </Form.Group>
-                    </Col>
-                    <Col md={4}>
-                      <Form.Group controlId="addName">
-                        <Form.Label>Name</Form.Label>
-                        <Form.Control
-                          type="text"
-                          name="name"
-                          value={addForm.name}
-                          onChange={handleAddInputChange}
-                          placeholder="Full name"
-                          required
-                        />
-                      </Form.Group>
-                    </Col>
-                    <Col md={4}>
-                      <Form.Group controlId="addCar">
-                        <Form.Label>Car</Form.Label>
-                        <Form.Control
-                          type="text"
-                          name="car"
-                          value={addForm.car}
-                          onChange={handleAddInputChange}
-                          placeholder="Car info"
-                        />
-                      </Form.Group>
-                    </Col>
-                  </Row>
-
-                  <Row className="mb-3">
-                    <Col md={3}>
-                      <Form.Group controlId="addIsActive">
-                        <Form.Check
-                          type="checkbox"
-                          label="Active"
-                          name="isActive"
-                          checked={addForm.isActive}
-                          onChange={handleAddInputChange}
-                        />
-                      </Form.Group>
-                    </Col>
-                    <Col md={3}>
-                      <Form.Group controlId="addValidPayment">
-                        <Form.Check
-                          type="checkbox"
-                          label="Valid Payment"
-                          name="validPayment"
-                          checked={addForm.validPayment}
-                          onChange={handleAddInputChange}
-                        />
-                      </Form.Group>
-                    </Col>
-                    <Col md={6}>
-                      <Form.Group controlId="addNotes">
-                        <Form.Label>Notes</Form.Label>
-                        <Form.Control
-                          as="textarea"
-                          rows={2}
-                          name="notes"
-                          value={addForm.notes}
-                          onChange={handleAddInputChange}
-                          placeholder="Additional notes"
-                        />
-                      </Form.Group>
-                    </Col>
-                  </Row>
-
-                  <div className="text-end">
-                    <Button type="submit" variant="success">
-                      Create Member
-                    </Button>
-                  </div>
-                </Form>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-      )}
-
-      {/* Members table in scrollable box */}
-      <Row>
-        <Col>
-          <div
-            className="border rounded"
-            style={{ maxHeight: '400px', overflowY: 'auto' }}
-          >
-            {isLoading ? (
-              <div className="d-flex justify-content-center align-items-center py-5">
-                <Spinner animation="border" role="status" className="me-2" />
-                <span>Loading members...</span>
-              </div>
-            ) : filteredMembers.length === 0 ? (
-              <div className="p-3 text-center text-muted">
-                No members found.
-              </div>
-            ) : (
-              <Table hover size="sm" className="mb-0">
-                <thead className="table-light" style={{ position: 'sticky', top: 0, zIndex: 1 }}>
-                  <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Car</th>
-                    <th>Active</th>
-                    <th>Valid Payment</th>
-                    <th>Notes</th>
-                    <th className="text-end">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredMembers.map((member) => {
-                    // normalize values so strings like "false" or "0" still work
-                    const isActive =
-                      member.isActive === true ||
-                      member.isActive === 'true' ||
-                      member.isActive === 1 ||
-                      member.isActive === '1';
-
-                    const validPayment =
-                      member.validPayment === true ||
-                      member.validPayment === 'true' ||
-                      member.validPayment === 1 ||
-                      member.validPayment === '1';
-
-                    // Priority: inactive (gray) overrides payment issue
-                    // We don't consider casees where a customer has is both inactive and has payment issues
-                    let rowClass = '';
-                    if (!isActive) {
-                      rowClass = 'member-row--inactive';
-                    } else if (!validPayment) {
-                      rowClass = 'member-row--payment-issue';
-                    }
-
-                    return (
-                      <tr key={member.id} className={rowClass}>
-                        <td>{member.id}</td>
-                        <td>{member.name}</td>
-                        <td>{member.car}</td>
-                        <td>{isActive ? 'Yes' : 'No'}</td>
-                        <td>{validPayment ? 'Yes' : 'No'}</td>
-                        <td>{member.notes}</td>
-                        <td className="text-end">
-                          <Button
-                            variant="outline-primary"
-                            size="sm"
-                            className="me-2"
-                            onClick={() => handleOpenEditModal(member)}
-                          >
-                            Edit
-                          </Button>
-                          <Button
-                            variant="outline-danger"
-                            size="sm"
-                            onClick={() => handleOpenDeleteModal(member)}
-                          >
-                            Delete
-                          </Button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </Table>
-            )}
+            {/* Actions (Moved Up!) */}
+            <div className="header-actions">
+              <Button
+                variant="outline-secondary"
+                onClick={() => handleExportExcel(filteredMembers)}
+              >
+                Export
+              </Button>
+              <Button
+                variant="primary"
+                className="fw-bold" // Bold text for emphasis
+                onClick={() => setShowAddForm((prev) => !prev)}
+              >
+                {showAddForm ? 'Close' : '+ New Member'}
+              </Button>
+            </div>
           </div>
-        </Col>
-      </Row>
 
-      {/* Edit Member Modal */}
-      <Modal show={showEditModal} onHide={() => setShowEditModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Edit Member</Modal.Title>
-        </Modal.Header>
-        <Form onSubmit={handleEditSubmit}>
-          <Modal.Body>
-            <Form.Group className="mb-3" controlId="editId">
-              <Form.Label>User ID (read-only)</Form.Label>
-              <Form.Control type="text" value={editForm.id} disabled />
-            </Form.Group>
+          {/* Error Alert */}
+          {error && (
+            <Row className="mb-3 px-4">
+              <Col><Alert variant="danger">{error}</Alert></Col>
+            </Row>
+          )}
 
-            <Form.Group className="mb-3" controlId="editName">
-              <Form.Label>Name</Form.Label>
+          {/* --- ROW 2: TOOLBAR (Search & Filters) --- */}
+          <div className="toolbar-wrapper">
+            
+            {/* Search - Takes up available space */}
+            <InputGroup className="search-input-group">
+              <InputGroup.Text className="bg-white border-end-0 text-muted">
+                <FontAwesomeIcon icon={faSearch} />
+              </InputGroup.Text>
               <Form.Control
                 type="text"
-                name="name"
-                value={editForm.name}
-                onChange={handleEditInputChange}
-                required
+                placeholder="Search by Name or ID"
+                className="border-start-0 ps-0"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
-            </Form.Group>
+            </InputGroup>
 
-            <Form.Group className="mb-3" controlId="editCar">
-              <Form.Label>Car</Form.Label>
-              <Form.Control
-                type="text"
-                name="car"
-                value={editForm.car}
-                onChange={handleEditInputChange}
-              />
-            </Form.Group>
+            {/* Filter: Level */}
+            <Form.Select
+              className="filter-select"
+              value={filterSubscription}
+              onChange={(e) => setFilterSubscription(e.target.value)}
+              style={{ width: 'auto', minWidth: '130px' }}
+            >
+              <option value="all">Level: All</option>
+              <option value="B">Basic</option>
+              <option value="D">Deluxe</option>
+              <option value="U">Ultimate</option>
+            </Form.Select>
 
-            <Row className="mb-3">
-              <Col md={6}>
-                <Form.Group controlId="editIsActive">
-                  <Form.Check
-                    type="checkbox"
-                    label="Active"
-                    name="isActive"
-                    checked={editForm.isActive}
-                    onChange={handleEditInputChange}
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group controlId="editValidPayment">
-                  <Form.Check
-                    type="checkbox"
-                    label="Valid Payment"
-                    name="validPayment"
-                    checked={editForm.validPayment}
-                    onChange={handleEditInputChange}
-                  />
-                </Form.Group>
+            {/* Filter: Status */}
+            <Form.Select
+              className="filter-select"
+              value={filterActive}
+              onChange={(e) => setFilterActive(e.target.value)}
+              style={{ width: 'auto', minWidth: '130px' }}
+            >
+              <option value="all">Status: All</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </Form.Select>
+
+            {/* Filter: Payment */}
+            <Form.Select
+              className="filter-select"
+              value={filterPayment}
+              onChange={(e) => setFilterPayment(e.target.value)}
+              style={{ width: 'auto', minWidth: '145px' }}
+            >
+              <option value="all">Payment: All</option>
+              <option value="paid">Paid</option>
+              <option value="needed">Needed</option>
+            </Form.Select>
+          </div>
+
+          {/* Add Member Form */}
+          {showAddForm && (
+            <Row className="mt-3 mb-3 px-4"> {/* Added px-4 to align with your content padding */}
+              <Col>
+                {/* UPDATED CARD CLASS HERE */}
+                <Card className="add-member-card">
+                  <Card.Body className="p-4">
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                      <Card.Title className="mb-0 fw-bold">Add New Member</Card.Title>
+                      <Button variant="close" onClick={() => setShowAddForm(false)} />
+                    </div>
+                    
+                    <Form onSubmit={handleAddSubmit}>
+                      {/* ... (Keep your existing form fields exactly as they are) ... */}
+                      
+                      {/* Example of your existing fields for context: */}
+                      <Row className="mb-3">
+                          <Col md={4}>
+                            <Form.Group controlId="addId">
+                              <Form.Label>ID <span className="text-danger">*</span></Form.Label>
+                              <Form.Control type="text" name="id" value={addForm.id} onChange={handleAddInputChange} placeholder="e.g. B101" required isInvalid={!!idError} />
+                              <Form.Control.Feedback type="invalid">{idError}</Form.Control.Feedback>
+                            </Form.Group>
+                          </Col>
+                          <Col md={4}>
+                            <Form.Group controlId="addName">
+                              <Form.Label>Name <span className="text-danger">*</span></Form.Label>
+                              <Form.Control type="text" name="name" value={addForm.name} onChange={handleAddInputChange} required />
+                            </Form.Group>
+                          </Col>
+                          <Col md={4}>
+                            <Form.Group controlId="addCar">
+                              <Form.Label>Vehicle</Form.Label>
+                              <Form.Control type="text" name="car" value={addForm.car} onChange={handleAddInputChange} />
+                            </Form.Group>
+                          </Col>
+                      </Row>
+
+                      <Row className="mb-3">
+                          <Col md={3}>
+                            <Form.Group controlId="addIsActive" className="pt-4">
+                              <Form.Check type="checkbox" label="Active" name="isActive" checked={addForm.isActive} onChange={handleAddInputChange} />
+                            </Form.Group>
+                          </Col>
+                          <Col md={3}>
+                            <Form.Group controlId="addValidPayment" className="pt-4">
+                                <Form.Check type="checkbox" label="Valid Payment" name="validPayment" checked={addForm.validPayment} onChange={handleAddInputChange} />
+                            </Form.Group>
+                          </Col>
+                          <Col md={6}>
+                            <Form.Group controlId="addNotes">
+                              <Form.Label>Notes</Form.Label>
+                              <Form.Control as="textarea" rows={1} name="notes" value={addForm.notes} onChange={handleAddInputChange} />
+                            </Form.Group>
+                          </Col>
+                      </Row>
+
+                      <div className="text-end">
+                        <Button type="submit" variant="success" className="fw-bold">
+                          Create Member
+                        </Button>
+                      </div>
+                    </Form>
+                  </Card.Body>
+                </Card>
               </Col>
             </Row>
+          )}
+        </div>
 
-            <Form.Group className="mb-3" controlId="editNotes">
-              <Form.Label>Notes</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                name="notes"
-                value={editForm.notes}
-                onChange={handleEditInputChange}
-              />
-            </Form.Group>
+        {/* Scrollable table section */}
+        <Row className="table-section g-0">
+          <Col className="d-flex flex-column h-100">
+            <div className="border rounded table-scroll">
+              {isLoading ? (
+                <div className="d-flex justify-content-center align-items-center h-100">
+                  <Spinner animation="border" role="status" className="me-2" />
+                  <span>Loading members...</span>
+                </div>
+              ) : filteredMembers.length === 0 ? (
+                <div className="p-3 text-center text-muted">No members found.</div>
+              ) : (
+                <Table hover size="sm" className="mb-0 w-100">
+                  <thead className="table-light">
+                    <tr>
+                      <th style={{ width: '10%' }}>ID</th>
+                      <th style={{ width: '20%' }}>Member</th>
+                      <th style={{ width: '15%' }}>Vehicle</th>
+                      <th className="text-center" style={{ width: '10%' }}>Status</th>
+                      <th className="text-center" style={{ width: '10%' }}>Payment</th>
+                      <th style={{ width: '18%' }}>Notes</th>
+                      <th className="text-end" style={{ width: '17%' }}></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredMembers.map((member) => {
+                      const isActive =
+                        member.isActive === true ||
+                        member.isActive === 'true' ||
+                        member.isActive === 1 ||
+                        member.isActive === '1';
+
+                      const validPayment =
+                        member.validPayment === true ||
+                        member.validPayment === 'true' ||
+                        member.validPayment === 1 ||
+                        member.validPayment === '1';
+
+                      return (
+                        <tr key={member.id}>
+                          {/* Truncate with Tooltip for ID, Name, Car, Notes */}
+                          <td title={member.id}>
+                            {member.id}
+                          </td>
+                          <td className="cell-truncate" title={member.name}>
+                            {member.name}
+                          </td>
+                          <td className="cell-truncate" title={member.car}>
+                            {member.car}
+                          </td>
+
+                          {/* Standard Boolean Columns */}
+                          <td className="text-center">
+                            {isActive 
+                              ? <span className="badge bg-success">Active</span> 
+                              : <span className="badge bg-secondary">Inactive</span>
+                            }
+                          </td>
+                          <td className="text-center">
+                            {validPayment 
+                              ? <span className="badge bg-success">Paid</span> 
+                              : <span className="badge bg-warning">Needed</span>
+                            }
+                          </td>
+
+                          <td className="cell-truncate" title={member.notes}>
+                            {member.notes}
+                          </td>
+
+                          <td className="text-end">
+                            <Button
+                              variant="outline-primary"
+                              size="sm"
+                              className="me-2"
+                              onClick={() => handleOpenEditModal(member)}
+                            >
+                              Edit
+                            </Button>
+                            <Button
+                              variant="outline-danger"
+                              size="sm"
+                              onClick={() => handleOpenDeleteModal(member)}
+                            >
+                              Delete
+                            </Button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </Table>
+              )}
+            </div>
+          </Col>
+        </Row>
+
+        {/* --- MODALS (Restored) --- */}
+        
+        {/* Edit Member Modal */}
+        <Modal show={showEditModal} onHide={() => setShowEditModal(false)} centered>
+          <Modal.Header closeButton>
+            <Modal.Title>Edit Member</Modal.Title>
+          </Modal.Header>
+          <Form onSubmit={handleEditSubmit}>
+            <Modal.Body>
+              <Form.Group className="mb-3" controlId="editId">
+                <Form.Label>User ID (read-only)</Form.Label>
+                <Form.Control type="text" value={editForm.id} disabled />
+              </Form.Group>
+
+              <Form.Group className="mb-3" controlId="editName">
+                <Form.Label>Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="name"
+                  value={editForm.name}
+                  onChange={handleEditInputChange}
+                  required
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3" controlId="editCar">
+                <Form.Label>Car</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="car"
+                  value={editForm.car}
+                  onChange={handleEditInputChange}
+                />
+              </Form.Group>
+
+              <Row className="mb-3">
+                <Col md={6}>
+                  <Form.Group controlId="editIsActive">
+                    <Form.Check
+                      type="checkbox"
+                      label="Active"
+                      name="isActive"
+                      checked={editForm.isActive}
+                      onChange={handleEditInputChange}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                  <Form.Group controlId="editValidPayment">
+                    <Form.Check
+                      type="checkbox"
+                      label="Valid Payment"
+                      name="validPayment"
+                      checked={editForm.validPayment}
+                      onChange={handleEditInputChange}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+
+              <Form.Group className="mb-3" controlId="editNotes">
+                <Form.Label>Notes</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={3}
+                  name="notes"
+                  value={editForm.notes}
+                  onChange={handleEditInputChange}
+                />
+              </Form.Group>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={() => setShowEditModal(false)}>
+                Cancel
+              </Button>
+              <Button variant="primary" type="submit">
+                Save Changes
+              </Button>
+            </Modal.Footer>
+          </Form>
+        </Modal>
+
+        {/* Delete Confirmation Modal */}
+        <Modal show={showDeleteModal} onHide={handleCancelDelete} centered>
+          <Modal.Header closeButton>
+            <Modal.Title>Confirm Delete</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {memberToDelete ? (
+              <>
+                Are you sure you want to delete member{' '}
+                <strong>{memberToDelete.name}</strong> (ID: {memberToDelete.id})?
+                This action cannot be undone.
+              </>
+            ) : (
+              'Are you sure you want to delete this member?'
+            )}
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={() => setShowEditModal(false)}>
+            <Button variant="secondary" onClick={handleCancelDelete}>
               Cancel
             </Button>
-            <Button variant="primary" type="submit">
-              Save Changes
+            <Button variant="danger" onClick={handleConfirmDelete}>
+              Delete
             </Button>
           </Modal.Footer>
-        </Form>
-      </Modal>
+        </Modal>
 
-      {/* Delete Confirmation Modal */}
-      <Modal show={showDeleteModal} onHide={handleCancelDelete} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Confirm Delete</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {memberToDelete ? (
-            <>
-              Are you sure you want to delete member{' '}
-              <strong>{memberToDelete.name}</strong> (ID: {memberToDelete.id})?
-              This action cannot be undone.
-            </>
-          ) : (
-            'Are you sure you want to delete this member?'
-          )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCancelDelete}>
-            Cancel
-          </Button>
-          <Button variant="danger" onClick={handleConfirmDelete}>
-            Delete
-          </Button>
-        </Modal.Footer>
-      </Modal>
       </Container>
     </>
   );

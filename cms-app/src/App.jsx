@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './api/firebaseconfig';
+import { MembersProvider } from './context/MembersContext';
 import AnalyticsPage from './pages/analytics-page';
 import CustomerListPage from './pages/customer-list-page';
 import CustomerSearchPage from './pages/customer-search-page';
@@ -37,28 +38,30 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Routes>
-        <Route
-          path="/login"
-          element={user ? <Navigate to="/" replace /> : <LoginPage />}
-        />
-        <Route
-          path="/analytics"
-          element={user ? <AnalyticsPage /> : <Navigate to="/login" replace />}
-        />
-        <Route
-          path="/customers"
-          element={user ? <CustomerListPage /> : <Navigate to="/login" replace />}
-        />
-        <Route
-          path="/"
-          element={user ? <CustomerSearchPage /> : <Navigate to="/login" replace />}
-        />
-        <Route
-          path="/test"
-          element={user ? <UploadPage/> : <Navigate to="/login" replace />}
-        />
-      </Routes>
+      <MembersProvider user={user}>
+        <Routes>
+          <Route
+            path="/login"
+            element={user ? <Navigate to="/" replace /> : <LoginPage />}
+          />
+          <Route
+            path="/analytics"
+            element={user ? <AnalyticsPage /> : <Navigate to="/login" replace />}
+          />
+          <Route
+            path="/customers"
+            element={user ? <CustomerListPage /> : <Navigate to="/login" replace />}
+          />
+          <Route
+            path="/"
+            element={user ? <CustomerSearchPage /> : <Navigate to="/login" replace />}
+          />
+          <Route
+            path="/test"
+            element={user ? <UploadPage/> : <Navigate to="/login" replace />}
+          />
+        </Routes>
+      </MembersProvider>
     </BrowserRouter>
   );
 }

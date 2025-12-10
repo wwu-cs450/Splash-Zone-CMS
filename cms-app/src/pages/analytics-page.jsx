@@ -104,7 +104,7 @@ function AnalyticsPage() {
 
   // Function to render content based on state
   const renderTab = () => {
-    switch(activeView) {
+    switch (activeView) {
       case 'graphs': return <GraphView />;
       case 'data': return <DataTableView />;
       case 'export': return <ExportOptions />;

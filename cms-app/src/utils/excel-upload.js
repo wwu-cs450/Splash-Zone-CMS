@@ -1,5 +1,4 @@
 import ExcelJS from 'exceljs';
-import { createMember } from '../api/firebase-crud.js';
 
 /**
  * Checks if a cell has a specific fill color
@@ -67,9 +66,14 @@ function rowHasColor(row, colorType) {
 /**
  * Reads Excel file (browser version) and uploads customer records to Firebase
  * @param {File} file - File object from browser input
+ * @param {Function} createMember - Function to create a member (from context or firebase-crud)
  * @returns {Promise<Object>} - Results object with success/error counts
  */
-export async function uploadCustomerRecordsFromFile(file) {
+export async function uploadCustomerRecordsFromFile(file, createMember) {
+  if (!createMember || typeof createMember !== 'function') {
+    throw new Error('createMember must be a function');
+  }
+
   const workbook = new ExcelJS.Workbook();
   const results = {
     total: 0,
@@ -122,7 +126,7 @@ export async function uploadCustomerRecordsFromFile(file) {
           // Determine validPayment based on yellow fill color
           const validPayment = !rowHasColor(row, 'yellow');
 
-          // Default notes to empty string
+          // Defaults notes column to empty string
           const notes = '';
 
           // Validate that we have at least an ID
@@ -177,9 +181,14 @@ export async function uploadCustomerRecordsFromFile(file) {
 /**
  * Reads Excel file and uploads customer records to Firebase (Node.js version)
  * @param {string} filePath - Path to the Excel file
+ * @param {Function} createMember - Function to create a member (from context or firebase-crud)
  * @returns {Promise<Object>} - Results object with success/error counts
  */
-export async function uploadCustomerRecords(filePath) {
+export async function uploadCustomerRecords(filePath, createMember) {
+  if (!createMember || typeof createMember !== 'function') {
+    throw new Error('createMember must be a function');
+  }
+  
   const workbook = new ExcelJS.Workbook();
   const results = {
     total: 0,

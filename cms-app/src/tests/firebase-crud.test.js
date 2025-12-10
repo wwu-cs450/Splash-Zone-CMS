@@ -5,12 +5,23 @@ import {
   doc,
   deleteDoc,
 } from "firebase/firestore";
+import {
+  getAuth,
+  connectAuthEmulator,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
 import { deleteApp } from "firebase/app";
 import { app } from "../api/firebaseconfig.js";
 
 // Connect to the Firestore emulator using the same app instance
 const db = getFirestore(app);
 connectFirestoreEmulator(db, "127.0.0.1", 8080);
+
+// Connect to the Auth emulator
+const auth = getAuth(app);
+connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
 
 // Import all functions from firebase-users.js
 import {
@@ -22,8 +33,25 @@ import {
   deleteMember,
 } from "../api/firebase-crud.js";
 
+// Authenticate a test user before running tests
+beforeAll(async () => {
+  try {
+    // Try to sign in with test user
+    await signInWithEmailAndPassword(auth, "test@example.com", "password123");
+  } catch (error) {
+    // If user doesn't exist, create it
+    if (error.code === 'auth/user-not-found') {
+      await createUserWithEmailAndPassword(auth, "test@example.com", "password123");
+    } else {
+      console.error("Failed to authenticate test user:", error);
+      throw error;
+    }
+  }
+});
+
 // Cleanup after all tests to prevent hanging processes
 afterAll(async () => {
+  await signOut(auth);
   await deleteApp(app);
 });
 
