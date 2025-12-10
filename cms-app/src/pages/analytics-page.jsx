@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import Button from 'react-bootstrap/Button';
 import Stack from 'react-bootstrap/Stack';
 import Card from 'react-bootstrap/Card';
@@ -61,6 +61,7 @@ function AnalyticsPage() {
   }
 
   function TierChart({ data }) {
+    useEffect(() => () => {}, []);
     const dict = memberCountByTier(data);
     const chartData = {
       labels: Object.keys(dict),
@@ -75,6 +76,7 @@ function AnalyticsPage() {
   }
 
   function StatusChart({ data }) {
+    useEffect(() => () => {}, []);
     const dict = memberCountByStatus(data);
     const chartData = {
       labels: Object.keys(dict),
@@ -88,14 +90,13 @@ function AnalyticsPage() {
     return <Bar data={chartData} />;
   }
 
-  //const GraphView = () => <TierChart data={carData} />;
   const GraphView = () => (
     <Card body className="content-card">
       <h3 className="chart-title">Membership Tiers Distribution</h3>
-      <TierChart data={data}/>
+      <TierChart key="tier-chart" data={data}/>
       <br />
       <h3 className="chart-title">Placeholder for Additional Graphs</h3>
-      <StatusChart data={data}/>
+      <StatusChart key="tier-chart" data={data}/>
     </Card>
   );
   const DataTableView = () => <Card body className="content-card">Place Holder for data tables with raw data</Card>;
