@@ -1,7 +1,78 @@
 # Wash-Zone-CMS
 
-This project entails the development of a customer management system for The Wash Zone car wash, located on 1907 E Isaac Ave in Walla Walla Washington. The customer is the owner and manager of the company, Susan Brookins, who will critique development and define the features for this project. The development team will include Zachary Kim, Josh Bielas, Andrew Gutierrez, and Careney Mchau. Our technical mentor will be Dr. Preston Carman, who will guide our development to adhere to production quality software standards.
+## Project Description
+A customer management system for The Wash Zone car wash, located on 1907 E Isaac Ave in Walla Walla Washington. This project will streamline company management by providing a single digital location for customer management. The development team will include Zachary Kim, Josh Bielas, Andrew Gutierrez, and Careney Mchau.
 
-This project will replace the car wash’s current pencil and paper customer record system in favor of a digital one: The Wash Zone operates on a subscription-based model, with each subscriber holding a sticker with a letter followed by three numbers; each ID maps to the information of the subscription holder. The employee must enter the office and verify each vehicle. Due to the unique nature of the current customer lookup flow, there are no known alternatives able to replace the physical system; finally, the budget for the application is slim to none. It is with these constraints in mind that our team looks to tailor a custom application to streamline the company’s workflow.
+## Local Setup
 
-For setup guides and general documentation see /docs directory. Example: docs/firebase-setup.md describes the setup for local firebase tools needed for the project.
+To run the application locally, you will need the following prerequisites:
+
+- Java JDK v21+
+- Node and NPM v20+
+
+Install Firebase tools:
+
+```
+npm install -g firebase-tools
+```
+
+Next, login with Firebase:
+
+```
+cms-app$ firebase login
+```
+
+Then, initialize Firebase:
+
+```
+cms-app$ firebase init
+```
+
+After "firebase init" is run an option box will appear. Use space bar to select options and enter to confirm. Most things will be left as default except a few options
+
+- For Features:
+  - Firestone
+  - Emulators
+  - Hosting (not app hosting)
+- For project setup:
+  - use existing project and then choose Washzone-cms.
+- for firestone setup
+  - location: us-west1
+  - everything else should be default
+- for emulator setup
+  - Authentication Emulator select:
+    - Firestore
+    - Emulator
+    - Hosting
+  - Leave everything else as default or Y.
+
+- For hosting setup, make sure you select all the defaults but set the build directory to dist/ instead of the default Public/. Otherwise, Firebase will look in Public/ for the build files, when Vite builds to dist/
+
+Now start the Firebase emulators:
+
+```
+cms-app$ firebase emulators:start
+```
+
+In a new terminal, while the Firebase emulator is still running:
+
+```
+cd cms-app/
+npm install
+npm run dev
+```
+
+## Testing
+
+To run tests locally, start the emulator and run "npm run test". Alternatively, you can run the tests in 1 line by using:
+
+```
+cms-app$ firebase emulators:exec "npm run test"
+```
+
+## Deployment
+
+```
+cms-app$ npm run build
+cms-app$ firebase deploy --only hosting
+```
