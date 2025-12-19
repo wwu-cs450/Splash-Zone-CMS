@@ -1,5 +1,5 @@
-/* eslint-env jest */
-import { jest } from '@jest/globals';
+/* eslint-env vitest */
+import { vi } from 'vitest';
 
 describe('MembersContext Caching System', () => {
   const mockMembers = [
@@ -10,7 +10,7 @@ describe('MembersContext Caching System', () => {
 
   describe('CRUD Operations with Caching', () => {
     test('createMember function should be called with correct parameters', () => {
-      const mockCreate = jest.fn().mockResolvedValue('B123');
+      const mockCreate = vi.fn().mockResolvedValue('B123');
 
       const params = ['B123', 'John Doe', 'Toyota', true, true, 'Test member'];
       mockCreate(...params);
@@ -20,7 +20,7 @@ describe('MembersContext Caching System', () => {
     });
 
     test('updateMember function should be called with correct parameters', () => {
-      const mockUpdate = jest.fn().mockResolvedValue('B123');
+      const mockUpdate = vi.fn().mockResolvedValue('B123');
 
       const memberId = 'B123';
       const updates = { name: 'Jane Doe', car: 'Honda' };
@@ -31,7 +31,7 @@ describe('MembersContext Caching System', () => {
     });
 
     test('deleteMember function should be called with correct parameters', () => {
-      const mockDelete = jest.fn().mockResolvedValue('B123');
+      const mockDelete = vi.fn().mockResolvedValue('B123');
 
       const memberId = 'B123';
       mockDelete(memberId);
@@ -41,7 +41,7 @@ describe('MembersContext Caching System', () => {
     });
 
     test('getAllMembers function should return array of members', async () => {
-      const mockGetAll = jest.fn().mockResolvedValue(mockMembers);
+      const mockGetAll = vi.fn().mockResolvedValue(mockMembers);
 
       const result = await mockGetAll();
 
@@ -51,7 +51,7 @@ describe('MembersContext Caching System', () => {
     });
 
     test('getMember function should return single member', async () => {
-      const mockGet = jest.fn().mockResolvedValue(mockMembers[0]);
+      const mockGet = vi.fn().mockResolvedValue(mockMembers[0]);
 
       const result = await mockGet('B001');
 
@@ -64,7 +64,7 @@ describe('MembersContext Caching System', () => {
   describe('Error Handling', () => {
     test('createMember should handle errors gracefully', async () => {
       const errorMessage = 'Failed to create member';
-      const mockCreate = jest.fn().mockRejectedValue(new Error(errorMessage));
+      const mockCreate = vi.fn().mockRejectedValue(new Error(errorMessage));
 
       await expect(
         mockCreate('B123', 'John Doe', 'Toyota', true, true, 'Test')
@@ -73,7 +73,7 @@ describe('MembersContext Caching System', () => {
 
     test('updateMember should handle errors gracefully', async () => {
       const errorMessage = 'Failed to update member';
-      const mockUpdate = jest.fn().mockRejectedValue(new Error(errorMessage));
+      const mockUpdate = vi.fn().mockRejectedValue(new Error(errorMessage));
 
       await expect(
         mockUpdate('B123', { name: 'Jane Doe' })
@@ -82,7 +82,7 @@ describe('MembersContext Caching System', () => {
 
     test('deleteMember should handle errors gracefully', async () => {
       const errorMessage = 'Failed to delete member';
-      const mockDelete = jest.fn().mockRejectedValue(new Error(errorMessage));
+      const mockDelete = vi.fn().mockRejectedValue(new Error(errorMessage));
 
       await expect(
         mockDelete('B123')
@@ -91,7 +91,7 @@ describe('MembersContext Caching System', () => {
 
     test('getAllMembers should handle errors gracefully', async () => {
       const errorMessage = 'Failed to load members';
-      const mockGetAll = jest.fn().mockRejectedValue(new Error(errorMessage));
+      const mockGetAll = vi.fn().mockRejectedValue(new Error(errorMessage));
 
       await expect(
         mockGetAll()
@@ -99,7 +99,7 @@ describe('MembersContext Caching System', () => {
     });
 
     test('getMember should return null for non-existent member', async () => {
-      const mockGet = jest.fn().mockResolvedValue(null);
+      const mockGet = vi.fn().mockResolvedValue(null);
 
       const result = await mockGet('nonexistent');
 
@@ -109,8 +109,8 @@ describe('MembersContext Caching System', () => {
 
   describe('Integration Workflow', () => {
     test('complete CRUD workflow maintains proper call sequence', async () => {
-      const mockCreate = jest.fn().mockResolvedValue('B001');
-      const mockGet = jest.fn().mockResolvedValue({
+      const mockCreate = vi.fn().mockResolvedValue('B001');
+      const mockGet = vi.fn().mockResolvedValue({
         id: 'B001',
         name: 'Alice Smith',
         car: 'Honda',
@@ -118,9 +118,9 @@ describe('MembersContext Caching System', () => {
         validPayment: true,
         notes: '',
       });
-      const mockUpdate = jest.fn().mockResolvedValue('B001');
-      const mockGetAll = jest.fn().mockResolvedValue(mockMembers);
-      const mockDelete = jest.fn().mockResolvedValue('B001');
+      const mockUpdate = vi.fn().mockResolvedValue('B001');
+      const mockGetAll = vi.fn().mockResolvedValue(mockMembers);
+      const mockDelete = vi.fn().mockResolvedValue('B001');
 
       // Create
       const createResult = await mockCreate('B001', 'Alice Smith', 'Honda', true, true, '');
@@ -152,7 +152,7 @@ describe('MembersContext Caching System', () => {
     });
 
     test('multiple create operations work sequentially', async () => {
-      const mockCreate = jest.fn()
+      const mockCreate = vi.fn()
         .mockResolvedValueOnce('B001')
         .mockResolvedValueOnce('B002')
         .mockResolvedValueOnce('B003');
@@ -168,7 +168,7 @@ describe('MembersContext Caching System', () => {
     });
 
     test('multiple update operations on same member work sequentially', async () => {
-      const mockUpdate = jest.fn().mockResolvedValue('B001');
+      const mockUpdate = vi.fn().mockResolvedValue('B001');
 
       await mockUpdate('B001', { car: 'Honda' });
       await mockUpdate('B001', { name: 'Alice Updated' });
@@ -186,7 +186,7 @@ describe('MembersContext Caching System', () => {
       const initialMembers = [mockMembers[0]];
       const refreshedMembers = mockMembers;
 
-      const mockGetAll = jest.fn()
+      const mockGetAll = vi.fn()
         .mockResolvedValueOnce(initialMembers)
         .mockResolvedValueOnce(refreshedMembers);
 
@@ -200,7 +200,7 @@ describe('MembersContext Caching System', () => {
     });
 
     test('concurrent operations should resolve correctly', async () => {
-      const mockCreate = jest.fn()
+      const mockCreate = vi.fn()
         .mockImplementation((id) =>
           new Promise((resolve) => setTimeout(() => resolve(id), 10))
         );
@@ -238,7 +238,7 @@ describe('MembersContext Caching System', () => {
     });
 
     test('getAllMembers should return an array', async () => {
-      const mockGetAll = jest.fn().mockResolvedValue(mockMembers);
+      const mockGetAll = vi.fn().mockResolvedValue(mockMembers);
 
       const result = await mockGetAll();
 
@@ -265,8 +265,8 @@ describe('MembersContext Caching System', () => {
 
   describe('Cache Invalidation', () => {
     test('cache should be updated after create operation', async () => {
-      const mockCreate = jest.fn().mockResolvedValue('B123');
-      const mockGetAll = jest.fn()
+      const mockCreate = vi.fn().mockResolvedValue('B123');
+      const mockGetAll = vi.fn()
         .mockResolvedValueOnce(mockMembers)
         .mockResolvedValueOnce([...mockMembers, { id: 'B123', name: 'John Doe', car: 'Toyota', isActive: true, validPayment: true, notes: '' }]);
 
@@ -280,8 +280,8 @@ describe('MembersContext Caching System', () => {
     });
 
     test('cache should be updated after update operation', async () => {
-      const mockUpdate = jest.fn().mockResolvedValue('B001');
-      const mockGet = jest.fn()
+      const mockUpdate = vi.fn().mockResolvedValue('B001');
+      const mockGet = vi.fn()
         .mockResolvedValueOnce({ ...mockMembers[0] })
         .mockResolvedValueOnce({ ...mockMembers[0], car: 'Toyota' });
 
@@ -295,8 +295,8 @@ describe('MembersContext Caching System', () => {
     });
 
     test('cache should be updated after delete operation', async () => {
-      const mockDelete = jest.fn().mockResolvedValue('B001');
-      const mockGetAll = jest.fn()
+      const mockDelete = vi.fn().mockResolvedValue('B001');
+      const mockGetAll = vi.fn()
         .mockResolvedValueOnce(mockMembers)
         .mockResolvedValueOnce(mockMembers.filter(m => m.id !== 'B001'));
 
