@@ -32,3 +32,4 @@ firestore*
 /coverage
 
 *.xlsx
+.claude/
