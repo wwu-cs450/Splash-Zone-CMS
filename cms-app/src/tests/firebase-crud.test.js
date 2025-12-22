@@ -1,5 +1,5 @@
 /* eslint-env vitest */
-import { vi } from 'vitest';
+import { beforeAll, afterAll, describe, expect, test, vi } from 'vitest';
 import {
   getFirestore,
   connectFirestoreEmulator,

@@ -1,7 +1,6 @@
 /* eslint-env vitest */
 import { describe, test, expect, beforeEach, vi } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
-import { renderHook, act } from '@testing-library/react';
+import { render, screen, waitFor, renderHook, act } from '@testing-library/react';
 import React from 'react';
 import { MembersProvider, useMembers } from '../context/MembersContext';
 import * as firebaseCrud from '../api/firebase-crud';

@@ -16,7 +16,7 @@ export default defineWorkspace([
     test: {
       name: 'jsdom',
       environment: 'jsdom',
-      include: ['src/**/*.test.{jsx,tsx}', 'src/tests/members-context.test.js'],
+      include: ['src/**/*.test.{jsx,tsx}'],
       setupFiles: ['./vitest.setup.jsdom.js'],
       globals: true,
     },

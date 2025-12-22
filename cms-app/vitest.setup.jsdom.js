@@ -18,3 +18,5 @@ process.env.VITE_FIREBASE_STORAGE_BUCKET = "test-storage-bucket";
 process.env.VITE_FIREBASE_MESSAGING_SENDER_ID = "test-sender-id";
 process.env.VITE_FIREBASE_APP_ID = "test-app-id";
 process.env.VITE_FIREBASE_MEASUREMENT_ID = "test-measurement-id";
+
+// End of vitest JSDOM setup
