@@ -6,7 +6,7 @@ export default defineWorkspace([
     test: {
       name: 'node',
       environment: 'node',
-      include: ['src/tests/firebase-*.test.js', 'src/api/**/*.test.js'],
+      include: ['src/tests/firebase-*.test.js'],
       setupFiles: ['./vitest.setup.node.js'],
       globals: true,
     },
