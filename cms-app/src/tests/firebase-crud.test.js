@@ -1,4 +1,5 @@
-/* eslint-env jest */
+/* eslint-env vitest */
+import { beforeAll, afterAll, describe, expect, test, vi } from 'vitest';
 import {
   getFirestore,
   connectFirestoreEmulator,
@@ -268,10 +269,13 @@ describe("User CRUD Operations (emulator)", () => {
 
     test("throws error when updating non-existent user", async () => {
       const userId = uniqId("noexist");
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
       await expect(
         updateMember(userId, { car: "New Car" })
       ).rejects.toThrow(`User with ID ${userId} does not exist`);
+
+      consoleErrorSpy.mockRestore();
     });
   });
 
@@ -296,10 +300,13 @@ describe("User CRUD Operations (emulator)", () => {
 
     test("throws error when deleting non-existent user", async () => {
       const userId = uniqId("nothere");
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
       await expect(deleteMember(userId)).rejects.toThrow(
         `User with ID ${userId} does not exist`
       );
+
+      consoleErrorSpy.mockRestore();
     });
   });
 

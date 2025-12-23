@@ -3,7 +3,7 @@ import js from "@eslint/js";
 import globals from "globals";
 import reactPlugin from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
-import jest from "eslint-plugin-jest";
+import vitest from "eslint-plugin-vitest";
 
 export default [
   // 1) What to ignore
@@ -27,7 +27,7 @@ export default [
       globals: {
         ...globals.browser,
         ...globals.node,
-        ...jest.environments.globals.globals,
+        ...vitest.environments.env.globals,
       },
       parserOptions: {
         ecmaFeatures: { jsx: true },
@@ -36,7 +36,7 @@ export default [
     plugins: {
       react: reactPlugin,
       "react-hooks": reactHooks,
-      jest,
+      vitest,
     },
     // Start from recommended rule sets
     rules: {
